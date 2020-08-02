@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+.burger {
+  width: 100%;
+  height: 350px;
+}
+
+.no-ingredient-text{
+  width: fit-content;
+  background: lightgray;
+  margin: auto;
+  font-size: 120%;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'Lato', sans-serif;
+}
+
+@media (min-width: 500px) and (min-height: 400px) {
+  .burger {
+    width: 350px;
+    height: 300px;
+  }
+}
+
+@media (min-width: 500px) and (min-height: 401px) {
+  .burger {
+    width: 450px;
+    height: 400px;
+  }
+  .no-ingredient-text{
+    font-size: 130%;
+  }
+}
+
+@media (min-width: 1000px) and (min-height: 700px) {
+  .burger {
+    width: 600px;
+    height: 500px;
+  }
+  .no-ingredient-text{
+    font-size: 150%;
+    padding: 5px 20px;
+  }
+}
+
+@media (min-width: 1300px) {
+  .burger {
+    width: 700px;
+    height: 600px;
+  }
+  .no-ingredient-text{
+    font-size: 170%;
+    padding: 5px 20px;
+  }
+}
+@media (max-width: 350px) {
+  .no-ingredient-text{
+    font-size: 85%;
+  }
+}
+
+.burger-small-view {
+  width: 80px;
+  height: 80px;
+  max-height: calc(100vh - 360px);
+}

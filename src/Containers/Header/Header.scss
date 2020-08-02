@@ -1,0 +1,42 @@
+.app-bar {
+  height: 56px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #703B09;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 90;
+
+  & .app-logo {
+    height: 80%;
+  }
+
+  & .toggle-drawer{
+    width: 40px;
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    div{
+      width: 90%;
+      height: 3px;
+      background-color: white;
+    }
+  }
+}
+
+@media (max-width: 499px) {
+  .drawer-button {
+    display: none;
+  }
+}
