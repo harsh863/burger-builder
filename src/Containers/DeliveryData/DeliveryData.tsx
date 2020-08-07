@@ -47,8 +47,8 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
     componentDidMount() {
         const ingredientCount = Object.values(this.props.draftOrder.ingredients).reduce((a, b) => a + b, 0);
         if (ingredientCount < 1) {
-            // this.setState({fieldValidityState: {deliveryMethod: false}});
-            // setTimeout(() => this.props.history.push({ pathname: RoutePaths.NOT_FOUND, state: {message: 'Invalid Path'} }));
+            this.setState({fieldValidityState: {deliveryMethod: false}});
+            setTimeout(() => this.props.history.push({ pathname: RoutePaths.NOT_FOUND, state: {message: 'Invalid Path'} }));
         }
     }
 

@@ -8,7 +8,7 @@ export class NavigationItem extends Component<NavigationItemProps, any>{
     render() {
         return (
             <div className={!this.props.desktopMode ? 'xs-navigation-item' : 'sm-navigation-item' }>
-                <NavLink to={this.props.item.link}>{this.props.item.label}</NavLink>
+                <NavLink to={this.props.item.link} replace>{this.props.item.label}</NavLink>
             </div>
         );
     }
