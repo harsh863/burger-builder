@@ -2,27 +2,22 @@ import {MenuItem} from "../../models/menu-item.model";
 import React, {Component} from "react";
 import './NavigationItems.scss';
 import {NavigationItem} from "./NavigationItem/NavigationItem";
+import {RoutePaths} from "../../enum/route-paths.enum";
 
-export class NavigationItems extends Component<NavigationItemsProps, NavigationItemsState>{
-    state = {
-        menuItems: [
-            {id: 1, link: '/home', label: 'Burger Builder', is_active: true},
-            {id: 2, link: '/checkout', label: 'Checkout'}
-        ]
-    }
+export class NavigationItems extends Component<NavigationItemsProps>{
+    menuItems: MenuItem[] = [
+        {id: 1, link: RoutePaths.BURGER_BUILDER, label: 'Burger Builder'},
+        {id: 2, link: RoutePaths.MY_ORDERS, label: 'My Orders'}
+    ]
 
     render() {
         return (
             <div className={this.props.desktopMode ? 'sm-navigation-items' : 'navigation-items'}>
-                {this.state.menuItems.map(menuItem => <NavigationItem key={menuItem.id} item={menuItem} desktopMode={this.props.desktopMode}/>)}
+                {this.menuItems.map(menuItem => <NavigationItem key={menuItem.id} item={menuItem} desktopMode={this.props.desktopMode}/>)}
             </div>
         );
     }
 }
 interface NavigationItemsProps{
     desktopMode: boolean;
-}
-
-interface NavigationItemsState {
-    menuItems: MenuItem[];
 }

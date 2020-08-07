@@ -11,7 +11,7 @@ class MenuDrawer extends Component<MenuDrawerProps> {
                         visible={this.props.drawerVisible}
                         onClose={this.props.onDrawerToggle}>
                 <div className='drawer'>
-                    <div className="burger-logo">
+                    <div className="drawer__burger-logo">
                         <AppLogo />
                     </div>
                     <div>

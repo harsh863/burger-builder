@@ -6,11 +6,10 @@ import {Ingredient} from "../../models/ingredient.model";
 
 export class BurgerDisplayWindow extends Component<BurgerProps>{
 
-
     getMiddleIngredients = () => {
         const middleIngredients: any[] = [];
         const ingredients: Ingredient = this.props.ingredients;
-        Object.keys(this.props.ingredients).forEach(key => {
+        !!this.props.ingredients && Object.keys(this.props.ingredients).forEach(key => {
             // @ts-ignore
             const ing_name: 'salad' | 'cheese' | 'bacon' | 'meat' = key;
             Array.from(Array(ingredients[ing_name])).forEach(_ => {

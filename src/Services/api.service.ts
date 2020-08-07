@@ -2,15 +2,17 @@ import axios from 'axios';
 
 export class ApiService {
     private static instance: ApiService;
+    public static signal = axios.CancelToken.source();
+
     axiosInstance = axios.create({
-        baseURL: '',
+        baseURL: 'https://react-burger-d81b5.firebaseio.com/',
         responseType: "json",
         headers: {
             'Content-Type': 'application/json'
         }
     });
 
-    static getInstance(): ApiService {  // can be used in function based components
+    static getInstance(): ApiService {
         if (!ApiService.instance) {
             ApiService.instance = new ApiService();
         }
@@ -21,7 +23,7 @@ export class ApiService {
         try {
             return await this.axiosInstance.get(path).then(res => res.data);
         } catch (error) {
-            return error;
+            return Promise.reject(error);
         }
     }
 
@@ -29,7 +31,7 @@ export class ApiService {
         try {
             return await this.axiosInstance.post(path, body).then(res => res.data);
         } catch (error) {
-            return error;
+            return Promise.reject(error);
         }
     }
 
@@ -37,7 +39,7 @@ export class ApiService {
         try {
             return await this.axiosInstance.delete(path).then(res => res.data);
         } catch (error) {
-            return error;
+            return Promise.reject(error);
         }
     }
 }

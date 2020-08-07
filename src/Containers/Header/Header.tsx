@@ -34,18 +34,18 @@ export class Header extends Component<any, HeaderState>{
                 <div className='app-bar'>
                     {
                         this.state.desktopMode ? null :
-                            <div className='toggle-drawer' onClick={this.toggleDrawer}>
+                            <div className='app-bar__toggle-drawer' onClick={this.toggleDrawer}>
                                 <div />
                                 <div />
                                 <div />
                             </div>
                     }
-                    <div className='app-logo'>
+                    <div className='app-bar__app-logo'>
                         <AppLogo />
                     </div>
                     {
                         this.state.desktopMode ?
-                            <div className='nav-items'>
+                            <div>
                                 <NavigationItems desktopMode={this.state.desktopMode} />
                             </div> : null
                     }

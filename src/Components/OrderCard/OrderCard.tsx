@@ -4,6 +4,7 @@ import {Button, LinearProgress} from "@material-ui/core";
 import './OrderCard.scss';
 import {Modal} from "../../Helper/Modal/Modal";
 import CloseIcon from '@material-ui/icons/Close';
+import {RouteComponentProps, withRouter} from "react-router";
 
 class OrderCard extends Component<OrderCardProps> {
 
@@ -20,17 +21,17 @@ class OrderCard extends Component<OrderCardProps> {
         return (
             <Modal open={this.props.show} onClose={this.props.onClose}>
                 <div className='order-card'>
-                    <div className='close-icon' onClick={this.props.onClose}>
+                    <div className='order-card__close-icon' onClick={this.props.onClose}>
                         <CloseIcon/>
                     </div>
                     <h3>Your Order</h3>
                     <p>A delicious burger with the following ingredients:</p>
                     <ul>{this.getIngredientSummary()}</ul>
-                    <p><strong>Total Price: ₹ {(70 * this.props.price).toFixed(2)}</strong></p>
-                    <div className='button-row'>
-                        <Button variant='contained' color='secondary' size='medium'
+                    <p><strong>Total Price: ₹ {this.props.price.toFixed(2)}</strong></p>
+                    <div className='order-card__button-row'>
+                        <Button className="danger" size='medium'
                                 onClick={this.props.onClose} disabled={this.props.requestInProgress}>Cancel</Button>
-                        <Button variant='contained' color='primary' size='medium'
+                        <Button className="success" size='medium'
                                 onClick={this.props.onOrder} disabled={this.props.requestInProgress}>Continue</Button>
                     </div>
                     {this.props.requestInProgress ? <LinearProgress style={{marginTop: '10px', borderRadius: '10px'}} color='primary'/> : null}
@@ -40,13 +41,13 @@ class OrderCard extends Component<OrderCardProps> {
     }
 }
 
-export default OrderCard;
+export default withRouter(OrderCard);
 
-interface OrderCardProps{
+interface OrderCardProps extends RouteComponentProps{
     ingredients: Ingredient;
     price: number;
     show: boolean;
     requestInProgress: boolean;
-    onClose: (event: any) => void,
-    onOrder: (event: any) => void
+    onClose: (event: any) => void;
+    onOrder: (event: any) => void;
 }

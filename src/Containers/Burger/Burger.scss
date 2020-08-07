@@ -1,7 +1,6 @@
 .burger-container {
   overflow-y: scroll;
-  position: absolute;
-  top: 70px;
+  margin-top: 10px;
   width: 100%;
   display: flex;
   height: calc(100vh - 400px);

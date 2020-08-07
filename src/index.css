@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#overlayDiv {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  height: 100px;
+}
+#modalOverlay {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  height: 100vh;
+}

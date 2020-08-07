@@ -12,8 +12,8 @@ export class BurgerIngredient extends Component<BurgerIngredientProps> {
         if (this.ingredientName === Ingredients.TOP_BREAD) {
             return (
                 <div className='top-bread'>
-                    <div className='seeds-1'/>
-                    <div className='seeds-2'/>
+                    <div className='top-bread__seeds-1'/>
+                    <div className='top-bread__seeds-2'/>
                 </div>
             );
         } else if (this.ingredients.includes(this.ingredientName)) {

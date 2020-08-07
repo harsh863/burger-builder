@@ -14,17 +14,26 @@
     font-family: 'Boogaloo', cursive;
   }
 
-  & .button-row {
+  &__button-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     & Button {
       font-weight: bolder;
+      font-size: 16px;
+    }
+
+    & .success {
+      color: #5C9210;
+    }
+
+    & .danger {
+      color: #944317;
     }
   }
 
-  .close-icon {
+  &__close-icon {
     position: absolute;
     right: 30px;
     top: 30px;

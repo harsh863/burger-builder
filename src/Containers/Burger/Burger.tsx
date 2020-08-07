@@ -1,100 +1,55 @@
 import React, {Component, Suspense} from "react";
-import {Ingredients} from "../../enum/ingredients.enum";
-import {Prices} from "../../enum/prices.enum";
 import {BurgerDisplayWindow} from "../../Components/BurgerDisplayWindow/BurgerDisplayWindow";
 import {IngredientControllerContext} from "../../Context/IngredientControllerContext";
 import {IngredientsController} from "../../Components/IngredientsController/IngredientsController";
 import {Ingredient} from "../../models/ingredient.model";
+import {RouteComponentProps} from "react-router";
+import {RoutePaths} from "../../enum/route-paths.enum";
+import {Header} from "../Header/Header";
+import {connect} from "react-redux";
+import {BurgerStore} from "../../models/burger-store.model";
+import {OrdersStore} from "../../models/orders-store.model";
+import * as actions from '../../Store/Actions/combined-action';
 import './Burger.scss';
-import {RouteProps} from "react-router";
+import {PartialOrder} from "../../models/order.model";
 
 const OrderCard = React.lazy(() => import('../../Components/OrderCard/OrderCard'));
 
-export class Burger extends Component<RouteProps, BurgerState> {
+class Burger extends Component<BurgerContainerProps, BurgerContainerState> {
     state = {
-        ingredients: {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0
-        },
-        price: 0,
         isOrderCardVisible: false,
-        requests: {
-            saveOrder: false
-        },
+        requests: { continueOrder: false },
         showBurgerOverview: true
     }
 
-    updateBurgerPrice = () => {
-        this.setState((state: { ingredients: {}; }) => {
-            let price = 0;
-            Object.keys(state.ingredients).forEach(key => {
-                const ingredients = state.ingredients;
-                // @ts-ignore
-                const ingredientQuantity = ingredients[key];
-                if (ingredientQuantity > 0) {
-                    // @ts-ignore
-                    const ing_key = Object.keys(Ingredients).find(i => Ingredients[i] === key);
-                    // @ts-ignore
-                    price += ingredientQuantity * Prices[ing_key];
-                }
-            });
-            price += Prices.TOP_BREAD + Prices.BOTTOM_BREAD + Prices.EXTRA;
-            return {price: price};
-        });
+    componentDidMount() {
+        this.props.clearDraftOrder();
+        this.props.initialiseBurger();
+        window.addEventListener('resize', this.onResize);
+        this.setState({showBurgerOverview: window.innerWidth  >= 900});
     }
 
     onOrderClicked = () => {
         this.setState({isOrderCardVisible: true});
     }
 
-    addIngredient = (name: string) => {
-        this.setState(state => {
-            // @ts-ignore
-            const prevCount = state.ingredients[name];
-            return {
-                ingredients: {
-                    ...state.ingredients,
-                    [name]: prevCount + 1
-                }
-            }
-        });
-        this.updateBurgerPrice();
-    }
-
-    removeIngredient = (name: string) => {
-        this.setState(state => {
-            // @ts-ignore
-            const prevCount = state.ingredients[name];
-            return {
-                ingredients: {
-                    ...state.ingredients,
-                    [name]: prevCount > 0 ? prevCount - 1 : 0
-                }
-            }
-        });
-        this.updateBurgerPrice();
-    }
-
     onOrderCardClose = (event: any) => {
         event.stopPropagation();
-        this.setState({isOrderCardVisible: false, requests: {saveOrder: false}});
+        this.setState({isOrderCardVisible: false, requests: {continueOrder: false}});
     }
 
     saveOrder = (event: any) => {
         event.stopPropagation();
-        this.setState({requests: {saveOrder: true}});
+        this.setState({requests: {continueOrder: true}});
+        setTimeout(_ => {
+            this.setState({requests: {continueOrder: false}});
+            this.props.draftBurgerOrder({ingredients: this.props.ingredients, price: this.props.price});
+            this.props.history.push(RoutePaths.CHECKOUT);
+        }, 500);
     }
 
     onResize = () => {
         this.setState({showBurgerOverview: window.innerWidth  >= 900});
-    }
-
-    componentDidMount() {
-        this.setState({showBurgerOverview: window.innerWidth  >= 900});
-        window.addEventListener('resize', this.onResize);
-        this.updateBurgerPrice();
     }
 
     componentWillUnmount() {
@@ -104,21 +59,22 @@ export class Burger extends Component<RouteProps, BurgerState> {
     render() {
         return (
             <React.Fragment>
+                <Header/>
                 {
                     this.state.showBurgerOverview ?
-                        <div className='overview-window'><BurgerDisplayWindow ingredients={this.state.ingredients} smallView/></div> :
+                        <div className='overview-window'><BurgerDisplayWindow ingredients={this.props.ingredients} smallView/></div> :
                         null
                 }
-                <div className='burger-container'><BurgerDisplayWindow ingredients={this.state.ingredients} /></div>
-                <IngredientControllerContext.Provider value={{addIngredient: this.addIngredient, removeIngredient: this.removeIngredient}}>
-                    <IngredientsController ingredients={this.state.ingredients} price={this.state.price} order={this.onOrderClicked} />
+                <div className='burger-container'><BurgerDisplayWindow ingredients={this.props.ingredients} /></div>
+                <IngredientControllerContext.Provider value={{addIngredient: this.props.addIngredient, removeIngredient: this.props.removeIngredient}}>
+                    <IngredientsController ingredients={this.props.ingredients} price={this.props.price} order={this.onOrderClicked} />
                 </IngredientControllerContext.Provider>
                 {
                     this.state.isOrderCardVisible ?
                         <Suspense fallback={<div/>}>
-                            <OrderCard ingredients={this.state.ingredients}
-                                       requestInProgress={this.state.requests.saveOrder}
-                                       price={this.state.price}
+                            <OrderCard ingredients={this.props.ingredients}
+                                       requestInProgress={this.state.requests.continueOrder}
+                                       price={this.props.price}
                                        show={this.state.isOrderCardVisible}
                                        onClose={this.onOrderCardClose}
                                        onOrder={this.saveOrder} />
@@ -130,12 +86,33 @@ export class Burger extends Component<RouteProps, BurgerState> {
     }
 }
 
-interface BurgerState {
+const mapStoreStateToProps = (store: {burger: BurgerStore, orders: OrdersStore}) => ({
+    ingredients: store.burger.ingredients,
+    price: store.burger.price
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+    addIngredient: (ingredientName: string) => dispatch(actions.addIngredient(ingredientName)),
+    removeIngredient: (ingredientName: string) => dispatch(actions.removeIngredient(ingredientName)),
+    draftBurgerOrder: (order: PartialOrder) => dispatch(actions.createDraftBurgerOrder(order)),
+    initialiseBurger: () => dispatch(actions.initialiseBurger()),
+    clearDraftOrder: () => dispatch(actions.clearDraftBurgerOrder())
+});
+
+export default connect(mapStoreStateToProps, mapDispatchToProps)(Burger);
+
+interface BurgerContainerProps extends RouteComponentProps{
     ingredients: Ingredient;
     price: number;
+    addIngredient: (name: string) => void;
+    removeIngredient: (name: string) => void;
+    draftBurgerOrder: (order: PartialOrder) => void;
+    initialiseBurger: () => void;
+    clearDraftOrder: () => void;
+}
+
+interface BurgerContainerState {
     isOrderCardVisible: boolean;
-    requests: {
-        saveOrder: boolean;
-    };
+    requests: { continueOrder: boolean };
     showBurgerOverview: boolean;
 }

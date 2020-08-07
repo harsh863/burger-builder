@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap');
+
+.checkout {
+  text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__main-text {
+    font-family: 'Kalam', sans-serif;
+    font-size: 3rem;
+    font-weight: bolder;
+    background: -webkit-linear-gradient(#c6c0c0, #2799c3);
+    line-height: 60px;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  &__burger-container{
+    width: 100%;
+    display: flex;
+    min-height: 50vh;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__button-row {
+    min-width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+
+    & Button {
+      font-size: 17px;
+      font-weight: bolder;
+    }
+
+    & .success {
+      color: #5C9210;
+    }
+
+    & .danger {
+      color: #944317;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .checkout {
+    &__button-row {
+      width: 90%;
+    }
+  }
+}
+@media (max-width: 800px) and (min-width: 600px) {
+  .checkout {
+    &__button-row {
+      width: 70%;
+    }
+  }
+}

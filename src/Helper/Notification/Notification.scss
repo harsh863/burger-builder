@@ -1,0 +1,40 @@
+.MuiSnackbar-root {
+  position: absolute !important;
+  max-width: 325px !important;
+  min-width: 200px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: 35px !important;
+  bottom: 0 !important;
+  align-items: baseline !important;
+
+  & .MuiSnackbarContent-root {
+    justify-content: center;
+    border: 1.5px solid green;
+    background: #6ebe6e;
+    max-width: 100% !important;
+
+    & .MuiSnackbarContent-message{
+      word-break: keep-all;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 5px 0;
+      font-family: monospace;
+    }
+  }
+}
+
+.success {
+  & .MuiSnackbarContent-root {
+    border: 1.5px solid green;
+    background: #6ebe6e;
+  }
+}
+
+.error {
+  & .MuiSnackbarContent-root {
+    border: 1.5px solid red;
+    background: #ff9898;
+  }
+}

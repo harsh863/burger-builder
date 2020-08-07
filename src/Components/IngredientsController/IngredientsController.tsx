@@ -13,10 +13,10 @@ export class IngredientsController extends Component<IngredientsControllerProps>
         const totalIngredientsQuantity = Object.values(this.props.ingredients).reduce((p, c) => p + c, 0);
         return (
             <div className='control-container'>
-                <p>Current Price: <strong>₹ {(70 * this.props.price).toFixed(2)}</strong></p>
-                <div className='control-panel'>{this.getIngredientsControlPanel()}</div>
+                <p>Current Price: <strong>₹ {this.props.price.toFixed(2)}</strong></p>
+                <div className='control-container__control-panel'>{this.getIngredientsControlPanel()}</div>
                 <button
-                    className='order-button'
+                    className='control-container__order-button'
                     disabled={totalIngredientsQuantity === 0}
                     onClick={this.props.order}>ORDER NOW</button>
             </div>
