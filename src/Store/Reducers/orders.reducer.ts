@@ -1,7 +1,7 @@
-import {StoreAction} from "../../models/store-action.model";
-import {OrdersStore} from "../../models/orders-store.model";
-import {StoreActions} from "../../enum/store-actions.enum";
-import {PartialOrder} from "../../models/order.model";
+import {StoreAction} from "../../Models/store-action.model";
+import {OrdersStore} from "../../Models/orders-store.model";
+import {StoreActions} from "../../Enum/store-actions.enum";
+import {PartialOrder} from "../../Models/order.model";
 
 export const ordersReducer = (state: OrdersStore = getOrdersStoreInitialState(), action: StoreAction): OrdersStore => {
     switch (action.type) {
@@ -13,6 +13,7 @@ export const ordersReducer = (state: OrdersStore = getOrdersStoreInitialState(),
         case StoreActions.BURGER_ORDER_INITIATED: return burgerOrderStarted(state);
         case StoreActions.ORDER_BURGER: return orderBurger(state, action);
         case StoreActions.BURGER_ORDER_COMPLETED: return burgerOrderCompleted(state, action);
+        case StoreActions.CLEAR_ORDER_STORE: return getOrdersStoreInitialState();
         default: return state;
     }
 }
@@ -30,7 +31,7 @@ const fetchingOrdersFinished = (state: OrdersStore, action: StoreAction): Orders
     ({ ...state, ordersLoaded: !action.payload.error, ordersLoading: false, fetchingOrdersFailed: action.payload.error });
 
 const saveOrders = (state: OrdersStore, action: StoreAction): OrdersStore =>
-    ({ ...state, orders: action.payload.orders, ordersLoading: false, ordersLoaded: true });
+    ({ ...state, orders: action.payload.orders, ordersLoading: false, ordersLoaded: true, draftOrder: getEmptyDraftBurger()});
 
 const burgerOrderStarted = (state: OrdersStore): OrdersStore =>
     ({ ...state, burgerOrderStarted: true, burgerOrderSuccessful: false, burgerOrderFailed: false});

@@ -1,10 +1,9 @@
 import React, {Component} from "react";
-import {Ingredient} from "../../models/ingredient.model";
+import {Ingredient} from "../../Models/ingredient.model";
 import {Button, LinearProgress} from "@material-ui/core";
 import './OrderCard.scss';
 import {Modal} from "../../Helper/Modal/Modal";
 import CloseIcon from '@material-ui/icons/Close';
-import {RouteComponentProps, withRouter} from "react-router";
 
 class OrderCard extends Component<OrderCardProps> {
 
@@ -41,9 +40,9 @@ class OrderCard extends Component<OrderCardProps> {
     }
 }
 
-export default withRouter(OrderCard);
+export default OrderCard;
 
-interface OrderCardProps extends RouteComponentProps{
+interface OrderCardProps{
     ingredients: Ingredient;
     price: number;
     show: boolean;

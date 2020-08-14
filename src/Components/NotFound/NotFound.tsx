@@ -1,15 +1,11 @@
 import React, {Component} from "react";
 import './NotFound.scss';
 import {RouteComponentProps} from "react-router";
-import {RoutePaths} from "../../enum/route-paths.enum";
+import {RoutePaths} from "../../Enum/route-paths.enum";
 
-export class NotFound extends Component<RouteComponentProps> {
+export default class NotFound extends Component<RouteComponentProps> {
 
-    goToHome = () => {
-        this.props.history.push({
-            pathname: RoutePaths.ROOT
-        });
-    }
+    goToHome = () => this.props.history.push(RoutePaths.ROOT);
 
     render() {
         // @ts-ignore

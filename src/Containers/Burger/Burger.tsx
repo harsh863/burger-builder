@@ -2,16 +2,17 @@ import React, {Component, Suspense} from "react";
 import {BurgerDisplayWindow} from "../../Components/BurgerDisplayWindow/BurgerDisplayWindow";
 import {IngredientControllerContext} from "../../Context/IngredientControllerContext";
 import {IngredientsController} from "../../Components/IngredientsController/IngredientsController";
-import {Ingredient} from "../../models/ingredient.model";
+import {Ingredient} from "../../Models/ingredient.model";
 import {RouteComponentProps} from "react-router";
-import {RoutePaths} from "../../enum/route-paths.enum";
+import {RoutePaths} from "../../Enum/route-paths.enum";
 import {Header} from "../Header/Header";
 import {connect} from "react-redux";
-import {BurgerStore} from "../../models/burger-store.model";
-import {OrdersStore} from "../../models/orders-store.model";
+import {BurgerStore} from "../../Models/burger-store.model";
+import {OrdersStore} from "../../Models/orders-store.model";
 import * as actions from '../../Store/Actions/combined-action';
 import './Burger.scss';
-import {PartialOrder} from "../../models/order.model";
+import {PartialOrder} from "../../Models/order.model";
+import {authGuard} from "../../HOC/Guards/auth.guard";
 
 const OrderCard = React.lazy(() => import('../../Components/OrderCard/OrderCard'));
 
@@ -88,7 +89,7 @@ class Burger extends Component<BurgerContainerProps, BurgerContainerState> {
 
 const mapStoreStateToProps = (store: {burger: BurgerStore, orders: OrdersStore}) => ({
     ingredients: store.burger.ingredients,
-    price: store.burger.price
+    price: store.burger.price,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -99,7 +100,7 @@ const mapDispatchToProps = (dispatch: any) => ({
     clearDraftOrder: () => dispatch(actions.clearDraftBurgerOrder())
 });
 
-export default connect(mapStoreStateToProps, mapDispatchToProps)(Burger);
+export default connect(mapStoreStateToProps, mapDispatchToProps)(authGuard(Burger));
 
 interface BurgerContainerProps extends RouteComponentProps{
     ingredients: Ingredient;

@@ -1,10 +1,8 @@
 import React, {Component} from "react";
 import {TextField} from "@material-ui/core";
-import {ErrorMessage} from "../../../enum/error-message.enum";
+import {ErrorMessage} from "../../../Enum/error-message.enum";
 import './Input.scss';
-
-const EMAIL_REGEX = '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$';
-const TEL_REGEX = '^([+]\\d{2})?\\d{10}$';
+import {EMAIL_REGEX, TEL_REGEX} from "../../../Constant/constant";
 
 export class Input extends Component<InputProps, InputState> {
 

@@ -2,17 +2,18 @@ import React, {Component} from "react";
 import './DeliveryData.scss';
 import {Input} from "../../Helper/FormItems/Input/Input";
 import {FormSelect} from "../../Helper/FormItems/FormSelect/FormSelect";
-import {DeliveryDetail} from "../../models/delivery-detail.model";
+import {DeliveryDetail} from "../../Models/delivery-detail.model";
 import {Button, LinearProgress} from "@material-ui/core";
 import {Prompt, RouteComponentProps} from "react-router";
-import {RoutePaths} from "../../enum/route-paths.enum";
+import {RoutePaths} from "../../Enum/route-paths.enum";
 import {NotificationService} from "../../Services/notification.service";
-import {Order, PartialOrder} from "../../models/order.model";
+import {Order, PartialOrder} from "../../Models/order.model";
 import {Header} from "../Header/Header";
-import {BurgerStore} from "../../models/burger-store.model";
-import {OrdersStore} from "../../models/orders-store.model";
+import {BurgerStore} from "../../Models/burger-store.model";
+import {OrdersStore} from "../../Models/orders-store.model";
 import {connect} from "react-redux";
 import * as actions from '../../Store/Actions/combined-action';
+import {AuthStore} from "../../Models/auth-store.model";
 
 class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
     options = [
@@ -78,7 +79,11 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
     }
 
     submit = () => {
-        this.props.orderBurger({...this.props.draftOrder, contact: this.state.form});
+        this.props.orderBurger({...this.props.draftOrder, price: this.props.draftOrder.price + (this.state.form.delivery_method === this.options[1].value ? 20 : 0), contact: this.state.form, userId: this.props.userId});
+    }
+
+    isFormFieldsValid = (): boolean => {
+        return (this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed));
     }
 
     render() {
@@ -94,7 +99,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <Input value={this.state.form.name}
                                label="Name" placeholder="Name"
-                               required disabled={this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed)}
+                               required disabled={this.isFormFieldsValid()}
                                onChange={event => this.updateForm('name', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('name', event)} />
                     </div>
@@ -102,7 +107,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <Input value={this.state.form.email}
                                label="Email" placeholder="Email" type="email"
-                               required disabled={this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed)}
+                               required disabled={this.isFormFieldsValid()}
                                onChange={event => this.updateForm('email', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('email', event)} />
                     </div>
@@ -111,7 +116,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                         <Input value={this.state.form.contact_number}
                                label="Contact Number" placeholder="Contact Number"
                                type="tel"
-                               required disabled={this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed)}
+                               required disabled={this.isFormFieldsValid()}
                                onChange={event => this.updateForm('contact_number', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('contact_number', event)} />
                     </div>
@@ -119,7 +124,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <Input value={this.state.form.address.street}
                                label="Street" placeholder="Street"
-                               required disabled={this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed)}
+                               required disabled={this.isFormFieldsValid()}
                                onChange={event => this.updateForm('address.street', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('street', event)} />
                     </div>
@@ -128,7 +133,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                         <Input value={this.state.form.address.zip}
                                label="ZIP Code" placeholder="ZIP Code"
                                type="number"
-                               required disabled={this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed)}
+                               required disabled={this.isFormFieldsValid()}
                                onChange={event => this.updateForm('address.zip', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('zip', event)} />
                     </div>
@@ -136,7 +141,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <Input value={this.state.form.address.country}
                                label="Country" placeholder="Country"
-                               required disabled={this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed)}
+                               required disabled={this.isFormFieldsValid()}
                                onChange={event => this.updateForm('address.country', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('country', event)} />
                     </div>
@@ -144,18 +149,18 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <FormSelect value={this.state.form.delivery_method}
                                     label="Delivery Method" options={this.options}
-                                    disabled={this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed)}
+                                    disabled={this.isFormFieldsValid()}
                                     onSelect={event => this.updateForm('delivery_method', event.target.value)} />
                     </div>
 
                     <div className="delivery-form-container__input-container">
                         <Button className="delivery-form-container__input-container__order-button"
-                                variant="contained" color="primary" disabled={!this.state.isFormValid || this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed)}
+                                variant="contained" color="primary" disabled={false}
                                 onClick={this.submit}>Order</Button>
                     </div>
 
                     {
-                        this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed) ?
+                        this.isFormFieldsValid() ?
                             <LinearProgress style={{width: '100%', marginTop: '10px', borderRadius: '10px'}} color='primary'/> : null
                     }
                 </div>
@@ -164,11 +169,12 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
     }
 }
 
-const mapStoreStateToProps = (store: {burger: BurgerStore, orders: OrdersStore}) => ({
+const mapStoreStateToProps = (store: {burger: BurgerStore, orders: OrdersStore, auth: AuthStore}) => ({
     draftOrder: store.orders.draftOrder,
     orderStarted: store.orders.burgerOrderStarted,
     orderSuccessful: store.orders.burgerOrderSuccessful,
-    orderFailed: store.orders.burgerOrderFailed
+    orderFailed: store.orders.burgerOrderFailed,
+    userId: store.auth.userId
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -183,6 +189,7 @@ interface DeliveryDataProps extends RouteComponentProps {
     orderSuccessful: boolean;
     orderFailed: boolean;
     orderBurger: (order: Order) => void;
+    userId: string;
 }
 
 interface DeliveryDataState {

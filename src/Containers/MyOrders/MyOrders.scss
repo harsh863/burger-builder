@@ -4,6 +4,34 @@
   flex-direction: column;
   margin-top: 20px;
   align-items: center;
+
+  &__no-orders-block {
+    display: flex;
+    transform: translateY(-20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    padding: 10px;
+
+    & h4{
+      font-size: 2rem;
+    }
+
+    & p {
+      font-size: 1.2rem;
+      transform: translateY(-20px);
+
+      & a {
+        text-decoration: none;
+
+        &:hover {
+          font-weight: bold;
+        }
+      }
+    }
+  }
 }
 
 .spinner-div {

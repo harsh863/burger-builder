@@ -1,5 +1,5 @@
 import {ApiService} from "./api.service";
-import {Order} from "../models/order.model";
+import {Order} from "../Models/order.model";
 
 export class OrdersService {
     private static instance: OrdersService;
@@ -12,8 +12,9 @@ export class OrdersService {
         return OrdersService.instance;
     }
 
-    getOrders(): Promise<Order[]> {
-        return this._apiService.get('/orders.json').then((val: {[key: string]: Order}) => {
+    getOrders(userId: string): Promise<Order[]> {
+        const queryParams = '&orderBy="userId"&equalTo="' + userId + '"';
+        return this._apiService.get('/orders.json', queryParams).then((val: {[key: string]: Order}) => {
             return Promise.resolve(Object.values(val));
         }).catch(error => Promise.reject(error));
     }

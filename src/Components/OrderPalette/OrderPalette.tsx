@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Order} from "../../models/order.model";
+import {Order} from "../../Models/order.model";
 import './OrderPalette.scss';
 import {BurgerDisplayWindow} from "../BurgerDisplayWindow/BurgerDisplayWindow";
 

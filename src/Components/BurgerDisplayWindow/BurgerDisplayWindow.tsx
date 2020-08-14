@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {BurgerIngredient} from "./BurgerIngredient/BurgerIngredient";
-import {Ingredients} from "../../enum/ingredients.enum";
+import {Ingredients} from "../../Enum/ingredients.enum";
 import './BurgerDisplayWindow.scss';
-import {Ingredient} from "../../models/ingredient.model";
+import {Ingredient} from "../../Models/ingredient.model";
 
 export class BurgerDisplayWindow extends Component<BurgerProps>{
 

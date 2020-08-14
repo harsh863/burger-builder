@@ -1,5 +1,5 @@
-import {StoreActions} from "../../enum/store-actions.enum";
-import {StoreAction} from "../../models/store-action.model";
+import {StoreActions} from "../../Enum/store-actions.enum";
+import {StoreAction} from "../../Models/store-action.model";
 
 export const addIngredient = (ingredientName: string): StoreAction => ({
     type: StoreActions.ADD_INGREDIENT,

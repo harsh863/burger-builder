@@ -1,8 +1,8 @@
-import {StoreActions} from "../../enum/store-actions.enum";
-import {Order, PartialOrder} from "../../models/order.model";
-import {StoreAction} from "../../models/store-action.model";
+import {StoreActions} from "../../Enum/store-actions.enum";
+import {Order, PartialOrder} from "../../Models/order.model";
+import {StoreAction} from "../../Models/store-action.model";
 import {OrdersService} from "../../Services/orders.service";
-import {store} from "../../index";
+import {RoutePaths} from "../../Enum/route-paths.enum";
 
 export const saveOrders = (orders: Order[]): StoreAction => ({
     type: StoreActions.SAVE_ORDERS,
@@ -46,15 +46,24 @@ export const burgerOrderFailed = (): StoreAction => ({
     payload: {error: true}
 });
 
-export const fetchOrders = () => {
-    return (dispatch: any) => {
-        if (!store.getState().orders.ordersLoaded) {
+export const clearOrdersStore = (): StoreAction => ({
+    type: StoreActions.CLEAR_ORDER_STORE
+});
+
+export const fetchOrders = (history: any, userId: string) => {
+    return (dispatch: any, getState: any) => {
+        if (!getState().orders.ordersLoaded) {
             dispatch(ordersLoading())
             const ordersService = OrdersService.getInstance();
-            ordersService.getOrders().then(orders => {
-                dispatch(ordersLoaded(false));
+            ordersService.getOrders(userId).then(orders => {
                 dispatch(saveOrders(orders));
-            }).catch(_ => dispatch(ordersLoaded(true)));
+                dispatch(ordersLoaded(false));
+            }).catch(error => {
+                if (error?.status === 401) {
+                    history.replace(RoutePaths.LOGOUT);
+                }
+                return dispatch(ordersLoaded(true));
+            });
         } else {
             dispatch(() => {});
         }
@@ -63,11 +72,11 @@ export const fetchOrders = () => {
 
 export const postBurger = (order: Order) => {
     return (dispatch: any) => {
-        dispatch(burgerOrderStart())
+        dispatch(burgerOrderStart());
         const ordersService = OrdersService.getInstance();
         ordersService.orderBurger(order).then(_ => {
             dispatch(orderBurger(order));
-            dispatch(burgerOrderSuccessful())
+            dispatch(burgerOrderSuccessful());
         }).catch(_ => dispatch(burgerOrderFailed()));
     }
 }

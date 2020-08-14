@@ -1,16 +1,15 @@
 import React, {Component} from "react";
-import {Ingredient} from "../../models/ingredient.model";
+import {Ingredient} from "../../Models/ingredient.model";
 import {Button} from "@material-ui/core";
 import {BurgerDisplayWindow} from "../../Components/BurgerDisplayWindow/BurgerDisplayWindow";
 import './Checkout.scss';
 import {Prompt, RouteComponentProps} from "react-router";
-import {RoutePaths} from "../../enum/route-paths.enum";
+import {RoutePaths} from "../../Enum/route-paths.enum";
 import {Header} from "../Header/Header";
-import {BurgerStore} from "../../models/burger-store.model";
-import {OrdersStore} from "../../models/orders-store.model";
+import {BurgerStore} from "../../Models/burger-store.model";
+import {OrdersStore} from "../../Models/orders-store.model";
 import {connect} from "react-redux";
-import {PartialOrder} from "../../models/order.model";
-import * as actions from '../../Store/Actions/combined-action';
+import {PartialOrder} from "../../Models/order.model";
 
 class Checkout extends Component<CheckoutProps,CheckoutState> {
     state = { showPrompt: true };
@@ -29,7 +28,6 @@ class Checkout extends Component<CheckoutProps,CheckoutState> {
 
     onContinueClicked = () => {
         this.setState({showPrompt: false});
-        this.props.modifyDraftBurgerOrder({...this.props.draftOrder});
         setTimeout(() => this.props.history.replace(RoutePaths.DELIVERY_DATA));
     }
 
@@ -59,15 +57,10 @@ const mapStoreStateToProps = (store: {burger: BurgerStore, orders: OrdersStore})
     draftOrder: store.orders.draftOrder
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
-    modifyDraftBurgerOrder: (order: PartialOrder) => dispatch(actions.createDraftBurgerOrder(order))
-});
-
-export default connect(mapStoreStateToProps, mapDispatchToProps)(Checkout);
+export default connect(mapStoreStateToProps)(Checkout);
 
 interface CheckoutProps extends RouteComponentProps{
     draftOrder: PartialOrder,
-    modifyDraftBurgerOrder: (order: PartialOrder) => void;
 }
 
 interface CheckoutState {

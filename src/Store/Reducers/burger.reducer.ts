@@ -1,9 +1,9 @@
-import {BurgerStore} from "../../models/burger-store.model";
-import {StoreAction} from "../../models/store-action.model";
-import {StoreActions} from "../../enum/store-actions.enum";
-import {Ingredient} from "../../models/ingredient.model";
-import {Prices} from "../../enum/prices.enum";
-import {Ingredients} from "../../enum/ingredients.enum";
+import {BurgerStore} from "../../Models/burger-store.model";
+import {StoreAction} from "../../Models/store-action.model";
+import {StoreActions} from "../../Enum/store-actions.enum";
+import {Ingredient} from "../../Models/ingredient.model";
+import {Prices} from "../../Enum/prices.enum";
+import {Ingredients} from "../../Enum/ingredients.enum";
 
 export const burgerReducer = (state: BurgerStore = getBurgerInitialState(), action: StoreAction): BurgerStore => {
     switch (action.type) {

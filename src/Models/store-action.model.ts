@@ -1,4 +1,4 @@
-import {StoreActions} from "../enum/store-actions.enum";
+import {StoreActions} from "../Enum/store-actions.enum";
 
 export interface StoreAction{
     type: StoreActions,

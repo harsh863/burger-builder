@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway+Dots&display=swap');
+
+.auth-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-image: linear-gradient(to right, lemonchiffon 50%, white 50%);
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  &__main-block {
+    width: 70vw;
+    height: 70vh;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 2px 5px 7px #888888;
+    display: flex;
+
+    &__empty-div {
+      background-color: lemonchiffon;
+      width: 50%;
+      background-image: url("../../../src/assets/images/photo-1585730316463-715e64340a2d-removebg-preview.png");
+      background-repeat: no-repeat;
+      background-position: right center;
+      background-size: 90%;
+    }
+
+    &__form-block {
+      background-color: white;
+      position: relative;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 30px;
+      box-sizing: border-box;
+
+      &__title {
+        font-family: 'Raleway Dots', cursive;
+        word-spacing: 1px;
+        font-weight: bolder;
+        font-size: 2rem;
+        margin-bottom: 10%;
+      }
+
+      &__input-container {
+        display: flex;
+        align-items: flex-end;
+        width: 100%;
+        margin: 15px 0;
+
+        & .MuiFormControl-root{
+          width: 100%;
+        }
+      }
+
+      &__navigate-link {
+        position: absolute;
+        font-size: 16px;
+        bottom: 30px;
+
+        & strong {
+          color: blue;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  &__title {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 3.5rem;
+    background: -webkit-linear-gradient(green, chocolate);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Cabin Sketch', cursive;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .auth-container {
+    background: white;
+    
+    &__title {
+      position: unset;
+      font-size: 3rem;
+    }
+    &__main-block {
+      width: 100%;
+      height: 100vh;
+
+      &__empty-div {
+        display: none;
+      }
+
+      &__form-block {
+        width: 100%;
+      }
+    }
+  }
+}

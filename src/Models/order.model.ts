@@ -5,6 +5,7 @@ export interface Order {
     contact: DeliveryDetail;
     price: number;
     ingredients: Ingredient;
+    userId: string;
 }
 
 export interface PartialOrder {

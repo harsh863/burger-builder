@@ -1,5 +1,5 @@
 import {Component} from "react";
-import {MenuItem} from "../../../models/menu-item.model";
+import {MenuItem} from "../../../Models/menu-item.model";
 import React from "react";
 import './NavigationItem.scss';
 import {NavLink} from "react-router-dom";

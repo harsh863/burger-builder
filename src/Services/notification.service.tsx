@@ -17,10 +17,7 @@ export class NotificationService {
         overlayDiv.id = 'overlayDiv';
         document.body.appendChild(overlayDiv);
         ReactDOM.render(
-            <Notification direction={direction}
-                          message={message}
-                          type={type}
-                          onClose={this.onClose}/>,
+            <Notification direction={direction} message={message} type={type} onClose={this.onClose}/>,
             document.getElementById('overlayDiv')
         )
     }

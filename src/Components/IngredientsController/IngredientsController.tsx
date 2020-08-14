@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Ingredient} from "../../models/ingredient.model";
+import {Ingredient} from "../../Models/ingredient.model";
 import {IngredientController} from "./IngredientController/IngredientController";
 import './IngredientsController.scss';
 

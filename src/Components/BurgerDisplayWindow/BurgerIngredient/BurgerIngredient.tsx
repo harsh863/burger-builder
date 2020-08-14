@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Ingredients} from "../../../enum/ingredients.enum";
+import {Ingredients} from "../../../Enum/ingredients.enum";
 import './BurgerIngredient.scss';
 
 export class BurgerIngredient extends Component<BurgerIngredientProps> {
