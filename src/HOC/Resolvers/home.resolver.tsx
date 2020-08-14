@@ -47,7 +47,7 @@ export function homeResolver(WrappedComponent: any) {
                 ((this.props.idTokenLoading && !this.props.idTokenLoaded) || this.props.idTokenFailed) ?
                     <div style={this.style}>
                         {this._spinnerService.getRandomSpinners()}
-                        <p style={{color: RandomColorUtils.getRandomColor(), marginTop: '60px'}}>Please wait while we load data from our servers.</p>
+                        <p style={{color: RandomColorUtils.getRandomColor(), marginTop: '60px', textAlign: 'center'}}>Please wait while we load data from our servers.</p>
                     </div> : <WrappedComponent {...this.props} />
             );
         }

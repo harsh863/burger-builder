@@ -42,7 +42,7 @@ class MyOrders extends Component<MyOrdersContainerProps, any>{
                     this.props.loading || this.props.error ?
                         <div className="spinner-div">
                             {this._spinnerService.getRandomSpinners()}
-                            <p style={{color: RandomColorUtils.getRandomColor()}}> Please wait while we fetch orders from our servers.</p>
+                            <p style={{color: RandomColorUtils.getRandomColor(), textAlign: 'center'}}> Please wait while we fetch orders from our servers.</p>
                         </div> :
                         <div className="my-order-container">
                             {
