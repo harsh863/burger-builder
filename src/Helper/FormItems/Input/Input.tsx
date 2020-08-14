@@ -1,15 +1,17 @@
 import React, {Component} from "react";
-import {TextField} from "@material-ui/core";
+import {IconButton, InputAdornment, TextField} from "@material-ui/core";
 import {ErrorMessage} from "../../../Enum/error-message.enum";
 import './Input.scss';
 import {EMAIL_REGEX, TEL_REGEX} from "../../../Constant/constant";
+import {Visibility, VisibilityOff} from "@material-ui/icons";
 
 export class Input extends Component<InputProps, InputState> {
 
     state = {
         invalid: true,
         touched: false,
-        message: ''
+        message: '',
+        showPassword: false
     }
 
     onChange = (event: any) => {
@@ -62,10 +64,19 @@ export class Input extends Component<InputProps, InputState> {
         }
     }
 
+    handleClickShowPassword = () => {
+        this.setState(state => ({showPassword: !state.showPassword}));
+    };
+
+    handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
     render() {
         return (
             // @ts-ignore
             <TextField
+                className="input-field"
                 autoFocus={this.props.focused}
                 disabled={this.props.disabled}
                 onBlurCapture={this.props.onBlur}
@@ -73,13 +84,23 @@ export class Input extends Component<InputProps, InputState> {
                 value={this.props.value}
                 label={this.props.label || ''}
                 placeholder={this.props.placeholder || ''}
-                type={this.props.type || 'text'}
+                type={this.state.showPassword ? 'text' : this.props.type}
                 variant={this.props.variant || 'outlined'}
                 error={this.state.invalid && this.state.touched}
                 size={this.props.size || 'small'}
                 helperText={this.state.message}
                 onChange={this.onChange}
                 onBlur={this.onBlur}
+                InputProps={{
+                    endAdornment: (
+                        this.props.type === "password" ?
+                            <InputAdornment position="end">
+                                <IconButton onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword}>
+                                    {this.state?.showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment> : null
+                    )
+                }}
                 FormHelperTextProps={{
                     className: 'helper-text'
                 }}/>
@@ -106,4 +127,5 @@ interface InputState {
     invalid: boolean;
     touched: boolean;
     message: string;
+    showPassword: boolean;
 }

@@ -1,4 +1,12 @@
-.helper-text {
-  font-size: .86rem !important;
-  margin-left: 4px !important;
+.input-field {
+  & .helper-text {
+    font-size: .86rem !important;
+    margin-left: 4px !important;
+  }
+
+  & .MuiInputAdornment-root {
+    & .MuiButtonBase-root {
+      padding: 0 !important;
+    }
+  }
 }
