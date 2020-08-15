@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {AuthStore} from "../../Models/auth-store.model";
 import {Input} from "../../Helper/FormItems/Input/Input";
 import * as actions from '../../Store/Actions/combined-action';
-import {Button} from "@material-ui/core";
+import {Button, Tooltip} from "@material-ui/core";
 import './Auth.scss';
 import {NotificationService} from "../../Services/notification.service";
 import { PulseLoader} from "react-spinners";
@@ -11,6 +11,7 @@ import {RandomColorUtils} from "../../Utils/random-color.utils";
 import {RouteComponentProps, withRouter} from "react-router";
 import {RoutePaths} from "../../Enum/route-paths.enum";
 import {anonymousGuard} from "../../HOC/Guards/anonymous.guard";
+import {ArrowBack, ArrowBackIos} from "@material-ui/icons";
 
 class Auth extends PureComponent<AuthProps, AuthState> {
     state = {
@@ -41,7 +42,7 @@ class Auth extends PureComponent<AuthProps, AuthState> {
         }
         if (nextProps.loginSuccessful) {
             this._notificationService.showNotification('Signed In Successfully', "success");
-            this.props.history.push(RoutePaths.HOME);
+            this.props.history.replace(RoutePaths.HOME);
         }
         if (nextProps.resetPasswordSuccessful) {
             this._notificationService.showNotification(`We have sent you a password reset link at "${this.state.form.email}"`, "success");
@@ -87,6 +88,10 @@ class Auth extends PureComponent<AuthProps, AuthState> {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.onResize);
+    }
+
+    getTooltipText = (): string => {
+        return !this.state.isResetPasswordMode ? 'Reset Password' : `Go Back to ${this.state.isLoginMode ? 'Login' : 'Sign up'}`;
     }
 
     render() {
@@ -137,9 +142,11 @@ class Auth extends PureComponent<AuthProps, AuthState> {
                             </div>
                         </div>
                         <div className="auth-container__main-block__login-block__footer">
-                            <div className={"auth-container__main-block__login-block__footer__forgot-password" + (this.shouldDisableFields() ? " disable" : "")} onClick={this.toggleResetPasswordMode}>
-                                {!this.state.isResetPasswordMode ? 'Forgot Password ?' : `<= Go Back to ${this.state.isLoginMode ? 'Login' : 'Sign up'} =>` }
-                            </div>
+                            <Tooltip title={this.getTooltipText()}>
+                                <div className={"auth-container__main-block__login-block__footer__forgot-password" + (this.shouldDisableFields() ? " disable" : "")} onClick={this.toggleResetPasswordMode}>
+                                    {!this.state.isResetPasswordMode ? 'Forgot Password ?' : <ArrowBackIos color="primary"/> }
+                                </div>
+                            </Tooltip>
                             <React.Fragment>
                                 {
                                     this.state.isLoginMode ?
