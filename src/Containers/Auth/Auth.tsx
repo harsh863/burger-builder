@@ -17,9 +17,19 @@ class Auth extends PureComponent<AuthProps, AuthState> {
         form: { email: '', password: '' },
         fieldValidity: { email: false, password: false },
         isLoginMode: true,
-        isResetPasswordMode: false
+        isResetPasswordMode: false,
+        isDesktopMode: true
     };
     private _notificationService = NotificationService.getInstance();
+
+    componentDidMount() {
+        this.setState({isDesktopMode: window.innerWidth > 650});
+        window.addEventListener('resize', this.onResize);
+    }
+
+    onResize = () => {
+        this.setState({isDesktopMode: window.innerWidth > 650});
+    }
 
     UNSAFE_componentWillReceiveProps(nextProps: Readonly<AuthProps>, nextContext: any) {
         if (nextProps.loginFailed || nextProps.signupFailed || nextProps.resetPasswordFailed) {
@@ -75,55 +85,69 @@ class Auth extends PureComponent<AuthProps, AuthState> {
         this.setState(state => ({isResetPasswordMode: !state.isResetPasswordMode, fieldValidity: {password: !state.isResetPasswordMode, email: false}, form: { email: '', password: '' }}));
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onResize);
+    }
+
     render() {
         return (
             <div className="auth-container">
-                <div className="auth-container__title">Burger Builder</div>
+                {
+                    !this.state.isDesktopMode ?
+                        <div className="auth-container__title">Burger Builder</div> : null
+
+                }
                 <div className="auth-container__main-block">
-                    <div className="auth-container__main-block__empty-div" />
-                    <div className="auth-container__main-block__form-block">
-                        <div className="auth-container__main-block__form-block__title">{this.state.isResetPasswordMode ? 'Reset Password' : this.state.isLoginMode ? ' LOGIN' : 'SIGN UP'}</div>
+                    {
+                        this.state.isDesktopMode ?
+                            <div className="auth-container__main-block__empty-div" /> : null
+                    }
+                    <div className="auth-container__main-block__login-block">
+                        <div className="auth-container__main-block__login-block__form-block">
+                            <div className="auth-container__main-block__login-block__form-block__title">{this.state.isResetPasswordMode ? 'Reset Password' : this.state.isLoginMode ? ' LOGIN' : 'SIGN UP'}</div>
 
-                        <div className="auth-container__main-block__form-block__input-container">
-                            <Input value={this.state.form.email}
-                                   label="Email" placeholder="Email" type="email"
-                                   required disabled={this.shouldDisableFields()}
-                                   onChange={event => this.updateForm('email', event.target.value)}
-                                   onValidityChange={event => this.updateFormValidity('email', event)} />
-                        </div>
-
-                        {
-                            !this.state.isResetPasswordMode ?
-                                <div className="auth-container__main-block__form-block__input-container">
-                                    <Input value={this.state.form.password}
-                                           label="Password" placeholder="Password" type="password"
-                                           required disabled={this.shouldDisableFields()}
-                                           onChange={event => this.updateForm('password', event.target.value)}
-                                           onValidityChange={event => this.updateFormValidity('password', event)} />
-                                </div> : null
-                        }
-
-                        <div className="auth-container__main-block__form-block__input-container">
-                            <Button variant="contained" color="primary" style={{marginRight: '10px'}}
-                                    disabled={!!Object.values(this.state.fieldValidity).filter(valid => !valid).length || this.shouldDisableFields()}
-                                    onClick={this.submit}>{this.state.isResetPasswordMode ? 'SEND LINK' : this.state.isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button >
+                            <div className="auth-container__main-block__login-block__form-block__input-container">
+                                <Input value={this.state.form.email}
+                                       label="Email" placeholder="Email" type="email"
+                                       required disabled={this.shouldDisableFields()}
+                                       onChange={event => this.updateForm('email', event.target.value)}
+                                       onValidityChange={event => this.updateFormValidity('email', event)} />
+                            </div>
 
                             {
-                                this.shouldDisableFields() ?
-                                    <PulseLoader color={RandomColorUtils.getRandomColor()} size={6}/> : null
+                                !this.state.isResetPasswordMode ?
+                                    <div className="auth-container__main-block__login-block__form-block__input-container">
+                                        <Input value={this.state.form.password}
+                                               label="Password" placeholder="Password" type="password"
+                                               required disabled={this.shouldDisableFields()}
+                                               onChange={event => this.updateForm('password', event.target.value)}
+                                               onValidityChange={event => this.updateFormValidity('password', event)} />
+                                    </div> : null
                             }
-                        </div>
 
-                        <div className={"auth-container__main-block__form-block__forgot-password" + (this.shouldDisableFields() ? " disable" : "")} onClick={this.toggleResetPasswordMode}>
-                            {!this.state.isResetPasswordMode ? 'Forgot Password ?' : `<= Go Back to ${this.state.isLoginMode ? 'Login' : 'Sign up'} =>` }
+                            <div className="auth-container__main-block__login-block__form-block__input-container">
+                                <Button variant="contained" color="primary" style={{marginRight: '10px'}}
+                                        disabled={!!Object.values(this.state.fieldValidity).filter(valid => !valid).length || this.shouldDisableFields()}
+                                        onClick={this.submit}>{this.state.isResetPasswordMode ? 'SEND LINK' : this.state.isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button >
+
+                                {
+                                    this.shouldDisableFields() ?
+                                        <PulseLoader color={RandomColorUtils.getRandomColor()} size={6}/> : null
+                                }
+                            </div>
                         </div>
-                        <React.Fragment>
-                            {
-                                this.state.isLoginMode ?
-                                    <div className="auth-container__main-block__form-block__navigate-link"><p>Don't have an account? </p><strong className={this.shouldDisableFields() ? "disable" : ""} onClick={_ => this.changeLoginMode()}>Sign Up</strong></div> :
-                                    <div className="auth-container__main-block__form-block__navigate-link"><p>Already have an account? </p><strong className={this.shouldDisableFields() ? "disable" : ""} onClick={_ => this.changeLoginMode()}>Login</strong></div>
-                            }
-                        </React.Fragment>
+                        <div className="auth-container__main-block__login-block__footer">
+                            <div className={"auth-container__main-block__login-block__footer__forgot-password" + (this.shouldDisableFields() ? " disable" : "")} onClick={this.toggleResetPasswordMode}>
+                                {!this.state.isResetPasswordMode ? 'Forgot Password ?' : `<= Go Back to ${this.state.isLoginMode ? 'Login' : 'Sign up'} =>` }
+                            </div>
+                            <React.Fragment>
+                                {
+                                    this.state.isLoginMode ?
+                                        <div className="auth-container__main-block__login-block__footer__navigate-link"><p>Don't have an account? </p><strong className={this.shouldDisableFields() ? "disable" : ""} onClick={_ => this.changeLoginMode()}>Sign Up</strong></div> :
+                                        <div className="auth-container__main-block__login-block__footer__navigate-link"><p>Already have an account? </p><strong className={this.shouldDisableFields() ? "disable" : ""} onClick={_ => this.changeLoginMode()}>Login</strong></div>
+                                }
+                            </React.Fragment>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -173,4 +197,5 @@ interface AuthState {
     fieldValidity: { email: boolean, password: boolean };
     isLoginMode: boolean;
     isResetPasswordMode: boolean;
+    isDesktopMode: boolean;
 }
