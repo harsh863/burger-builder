@@ -29,7 +29,7 @@ const loginCompleted = (state: AuthStore, action: StoreAction): AuthStore =>
     ({ ...state, login_successful: !action.payload.error, login_failed: action.payload.error, errorMessage: action.payload.message || ''});
 
 const signUpStarted = (state: AuthStore): AuthStore =>
-    ({ ...state, ...getSignupInitialState(), ...getResetPasswordInitialState(), signup_initiated: true});
+    ({ ...state, ...getLoginInitialState() , ...getSignupInitialState(), ...getResetPasswordInitialState(), signup_initiated: true});
 
 const signUpCompleted = (state: AuthStore, action: StoreAction): AuthStore =>
     ({ ...state, signup_successful: !action.payload.error, signup_failed: action.payload.error, errorMessage: action.payload.message || ''});
@@ -44,7 +44,7 @@ const idTokenExchangeCompleted = (state: AuthStore, action: StoreAction): AuthSt
     ({ ...state, id_token_loading: false, id_token_loaded: !action.payload.error, id_token_failed: action.payload.error, errorMessage: action.payload.message || ''});
 
 const resetPasswordStarted = (state: AuthStore): AuthStore =>
-    ({...state, ...getResetPasswordInitialState(), reset_password_initiated: true});
+    ({...state, ...getLoginInitialState(), ...getSignupInitialState(), ...getResetPasswordInitialState(), reset_password_initiated: true});
 
 const resetPasswordCompleted = (state: AuthStore, action: StoreAction): AuthStore =>
     ({ ...state, reset_password_initiated: false, reset_password_successful: !action.payload.error, reset_password_failed: action.payload.error, errorMessage: action.payload.message || ''});
