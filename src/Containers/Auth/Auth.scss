@@ -147,6 +147,7 @@
     &__main-block {
       box-shadow: unset;
       width: 100%;
+      height: max-content;
 
       &__empty-div {
         display: none;

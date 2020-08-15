@@ -5,7 +5,6 @@ import * as actions from '../../Store/Actions/combined-action';
 import {connect} from "react-redux";
 import {NotificationService} from "../../Services/notification.service";
 import {RoutePaths} from "../../Enum/route-paths.enum";
-import {authGuard} from "../../HOC/Guards/auth.guard";
 
 class Logout extends Component<LogoutProps> {
     componentDidMount() {
@@ -27,7 +26,7 @@ const mapDispatchToProps = (dispatch: any) => ({
     logout: () => dispatch(actions.logout())
 });
 
-export default connect(null, mapDispatchToProps)(authGuard(withRouter(Logout)));
+export default connect(null, mapDispatchToProps)(withRouter(Logout));
 
 interface LogoutProps extends RouteComponentProps{
     clearOrdersStore: () => void;

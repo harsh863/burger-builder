@@ -10,7 +10,7 @@ export function authGuard(WrappedComponent: any) {
         render() {
             return (
                 this.props.idTokenLoaded && this.props.userId ?
-                    <WrappedComponent {...this.props} /> : localStorage.getItem(AUTH_TOKEN) ?  <Redirect to={RoutePaths.HOME} /> : <Redirect to={RoutePaths.LOGOUT} />
+                    <WrappedComponent {...this.props} /> : <Redirect to={RoutePaths.HOME} />
             );
         }
     }
