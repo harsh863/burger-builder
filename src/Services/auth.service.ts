@@ -28,6 +28,13 @@ export class AuthService {
             }).catch(error => Promise.reject(this.getErrorMessage(error)));
     }
 
+    resetPassword = async (email: string) => {
+        const data = {requestType: 'PASSWORD_RESET', email};
+        return await axios.post(`${this.auth_sub_url}sendOobCode?key=${WEB_API_KEY}`, data)
+            .then(res => Promise.resolve(res?.data))
+            .catch(error => Promise.reject(this.getErrorMessage(error)));
+    }
+
     exchangeIdToken = async (refreshToken: string) =>  {
         const data = {grant_type: 'refresh_token', refresh_token: refreshToken}
         return await axios.post(`https://securetoken.googleapis.com/v1/token?key=${WEB_API_KEY}`, data)

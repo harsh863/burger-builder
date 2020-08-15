@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Raleway+Dots&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 .auth-container {
   width: 100vw;
@@ -41,7 +41,7 @@
       box-sizing: border-box;
 
       &__title {
-        font-family: 'Raleway Dots', cursive;
+        font-family: 'Quicksand', sans-serif;
         word-spacing: 1px;
         font-weight: bolder;
         font-size: 2rem;
@@ -59,27 +59,51 @@
         }
       }
 
+      & Button {
+        font-family: 'Lato', sans-serif;
+        border-radius: 32.5px;
+        padding: 9px 20px;
+        font-weight: bold;
+      }
+
       &__navigate-link {
+        display: flex;
+        align-items: center;
         position: absolute;
         font-size: 16px;
         bottom: 30px;
+        flex-wrap: nowrap;
 
         & strong {
           color: blue;
           cursor: pointer;
+          margin-left: 5px;
         }
+      }
+
+      &__forgot-password {
+        position: absolute;
+        bottom: 100px;
+        text-align: center;
+        width: 100%;
+        font-size: 1rem;
+        color: #aaa;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: underline;
       }
     }
   }
 
   &__title {
+    width: 100%;
     text-align: center;
     margin-top: 20px;
     font-size: 3.5rem;
     background: -webkit-linear-gradient(green, chocolate);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-family: 'Cabin Sketch', cursive;
+    font-family: 'Cabin Sketch', sans-serif;
     font-weight: bold;
     position: absolute;
     top: 0;
@@ -92,7 +116,7 @@
     
     &__title {
       position: unset;
-      font-size: 3rem;
+
     }
     &__main-block {
       box-shadow: unset;
@@ -105,7 +129,24 @@
 
       &__form-block {
         width: 100%;
+        padding: 50px 30px;
       }
     }
   }
+}
+
+@media (max-width: 300px) {
+  .auth-container__main-block__form-block__navigate-link {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) and (min-width: 600px) {
+  .auth-container__main-block__form-block__navigate-link {
+    flex-direction: column;
+  }
+}
+
+.disable {
+  cursor: not-allowed !important;
 }

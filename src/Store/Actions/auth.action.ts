@@ -39,6 +39,15 @@ export const tokenExchangeCompleted = (isError = false, message?: string): Store
     payload: {error: isError, message}
 });
 
+export const resetPasswordStarted = (): StoreAction => ({
+   type: StoreActions.RESET_PASSWORD_STARTED
+});
+
+export const resetPasswordCompleted = (isError = false, message?: string): StoreAction => ({
+    type: StoreActions.RESET_PASSWORD_COMPLETED,
+    payload: {error: isError, message}
+});
+
 export const logout = (): StoreAction => ({
     type: StoreActions.LOGOUT
 });
@@ -78,4 +87,15 @@ export const generateIDToken = (refreshToken: string) => {
             dispatch(() => {});
         }
     }
+}
+
+export const resetPassword = (email: string) => {
+    return (dispatch: any) => {
+        dispatch(resetPasswordStarted());
+        const authService = AuthService.getInstance();
+        authService.resetPassword(email)
+            .then(_ => dispatch(resetPasswordCompleted()))
+            .catch(error => dispatch(resetPasswordCompleted(true, error.message)));
+
+    };
 }

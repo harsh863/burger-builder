@@ -95,7 +95,7 @@ export class Input extends Component<InputProps, InputState> {
                     endAdornment: (
                         this.props.type === "password" ?
                             <InputAdornment position="end">
-                                <IconButton onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword}>
+                                <IconButton onClick={this.handleClickShowPassword} disabled={this.props.disabled}>
                                     {this.state?.showPassword ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
                             </InputAdornment> : null
