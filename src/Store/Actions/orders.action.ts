@@ -36,15 +36,25 @@ export const burgerOrderStart = (): StoreAction => ({
     type: StoreActions.BURGER_ORDER_INITIATED
 });
 
-export const burgerOrderSuccessful = (): StoreAction => ({
+export const burgerOrderCompleted = (isError = false): StoreAction => ({
     type: StoreActions.BURGER_ORDER_COMPLETED,
-    payload: {error: false}
+    payload: {error: isError}
 });
 
-export const burgerOrderFailed = (): StoreAction => ({
-    type: StoreActions.BURGER_ORDER_COMPLETED,
-    payload: {error: true}
+export const deleteBurgerStart = (): StoreAction => ({
+    type: StoreActions.DELETE_BURGER_STARTED
 });
+
+export const deleteBurger = (orderId: string): StoreAction => ({
+    type: StoreActions.DELETE_BURGER,
+    payload: {id: orderId}
+});
+
+export const deleteBurgerCompleted = (isError = false): StoreAction => ({
+    type: StoreActions.DELETE_BURGER_COMPLETED,
+    payload: {error: isError}
+});
+
 
 export const clearOrdersStore = (): StoreAction => ({
     type: StoreActions.CLEAR_ORDER_STORE
@@ -74,9 +84,20 @@ export const postBurger = (order: Order) => {
     return (dispatch: any) => {
         dispatch(burgerOrderStart());
         const ordersService = OrdersService.getInstance();
-        ordersService.orderBurger(order).then(_ => {
-            dispatch(orderBurger(order));
-            dispatch(burgerOrderSuccessful());
-        }).catch(_ => dispatch(burgerOrderFailed()));
+        ordersService.orderBurger(order).then((data: Order) => {
+            dispatch(orderBurger(data));
+            dispatch(burgerOrderCompleted());
+        }).catch(_ => dispatch(burgerOrderCompleted(true)));
+    }
+}
+
+export const deleteBurgerOrder = (orderId: string) => {
+    return (dispatch: any) => {
+        dispatch(deleteBurgerStart());
+        const ordersService = OrdersService.getInstance();
+        ordersService.deleteOrder(orderId).then(_ => {
+            dispatch(deleteBurger(orderId));
+            dispatch(deleteBurgerCompleted());
+        }).catch(_ => dispatch(deleteBurgerCompleted(true)));
     }
 }

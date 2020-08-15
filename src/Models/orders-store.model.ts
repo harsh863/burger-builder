@@ -9,4 +9,7 @@ export interface OrdersStore {
     burgerOrderStarted: boolean;
     burgerOrderSuccessful: boolean;
     burgerOrderFailed: boolean;
+    deleteBurgerStarted: boolean;
+    deleteBurgerSuccessful: boolean;
+    deleteBurgerFailed: boolean;
 }

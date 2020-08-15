@@ -32,6 +32,12 @@ class MyOrders extends Component<MyOrdersContainerProps, any>{
         if (this.props.error) {
             this._notificationService.showNotification('An unknown error occurred while fetching Orders from server', "error");
         }
+        if (this.props.deleteBurgerFailed) {
+            this._notificationService.showNotification('Deleting Order Failed', "error");
+        }
+        if (this.props.deleteBurgerSuccessful) {
+            this._notificationService.showNotification('Order Deleted Successfully', "success");
+        }
     }
 
     render() {
@@ -47,7 +53,8 @@ class MyOrders extends Component<MyOrdersContainerProps, any>{
                         <div className="my-order-container">
                             {
                                 this.props.orders.length ?
-                                    this.props.orders.map((order: Order, index: string | number | undefined) => <OrderPalette key={index} order={order}/>) :
+                                    this.props.orders.map((order: Order, index: string | number | undefined) =>
+                                        <OrderPalette key={index} order={order} onDelete={this.props.deleteOrder}/>) :
                                     <div className="my-order-container__no-orders-block">
                                         <h4 style={{color: RandomColorUtils.getRandomColor()}}>You haven't ordered anything yet.</h4>
                                         <p>Start creating your first burger by clicking <Link to={RoutePaths.BURGER_BUILDER}>here</Link></p>
@@ -65,11 +72,15 @@ const mapStoreStateToProps = (store: {burger: BurgerStore, orders: OrdersStore, 
     loading: store.orders.ordersLoading,
     error: store.orders.fetchingOrdersFailed,
     userId: store.auth.userId,
+    deleteBurgerStarted: store.orders.deleteBurgerStarted,
+    deleteBurgerSuccessful: store.orders.deleteBurgerSuccessful,
+    deleteBurgerFailed: store.orders.deleteBurgerFailed,
     idTokenLoaded: store.auth.id_token_loaded
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-    fetchOrders: (history: any, userId: string) => dispatch(actions.fetchOrders(history, userId))
+    fetchOrders: (history: any, userId: string) => dispatch(actions.fetchOrders(history, userId)),
+    deleteOrder: (orderId: string) =>  dispatch(actions.deleteBurgerOrder(orderId))
 });
 
 export default connect(mapStoreStateToProps, mapDispatchToProps)(authGuard(MyOrders));
@@ -79,6 +90,10 @@ interface MyOrdersContainerProps extends RouteComponentProps{
     loading: boolean;
     error: boolean;
     idTokenLoaded: boolean;
+    deleteBurgerStarted: boolean
+    deleteBurgerSuccessful: boolean
+    deleteBurgerFailed: boolean
     userId: string;
     fetchOrders: (history: any, userId: string) => void;
+    deleteOrder: (orderId: string) => void;
 }

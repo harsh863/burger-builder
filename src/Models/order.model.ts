@@ -2,6 +2,7 @@ import {DeliveryDetail} from "./delivery-detail.model";
 import {Ingredient} from "./ingredient.model";
 
 export interface Order {
+    id?: string;
     contact: DeliveryDetail;
     price: number;
     ingredients: Ingredient;

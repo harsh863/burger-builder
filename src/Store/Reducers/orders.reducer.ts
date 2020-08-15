@@ -13,19 +13,22 @@ export const ordersReducer = (state: OrdersStore = getOrdersStoreInitialState(),
         case StoreActions.BURGER_ORDER_INITIATED: return burgerOrderStarted(state);
         case StoreActions.ORDER_BURGER: return orderBurger(state, action);
         case StoreActions.BURGER_ORDER_COMPLETED: return burgerOrderCompleted(state, action);
+        case StoreActions.DELETE_BURGER_STARTED: return deleteBurgerStarted(state);
+        case StoreActions.DELETE_BURGER: return deleteBurger(state, action);
+        case StoreActions.DELETE_BURGER_COMPLETED: return deleteBurgerCompleted(state, action);
         case StoreActions.CLEAR_ORDER_STORE: return getOrdersStoreInitialState();
         default: return state;
     }
 }
 
 const clearDraftBurgerOrder = (state: OrdersStore): OrdersStore =>
-    ({ ...state, draftOrder: getEmptyDraftBurger(), burgerOrderFailed: false, burgerOrderSuccessful: false, burgerOrderStarted: false});
+    ({ ...state, draftOrder: getEmptyDraftBurger(), ...getBurgerOrderInitialState()});
 
 const createDraftBurgerOrder = (state: OrdersStore, action: StoreAction): OrdersStore =>
     ({ ...state, draftOrder: {...action.payload}});
 
 const fetchingOrdersStarted = (state: OrdersStore): OrdersStore =>
-    ({ ...state, ordersLoaded: false, ordersLoading: true, fetchingOrdersFailed: false });
+    ({ ...state, ...getOrdersInitialState(), ordersLoading: true });
 
 const fetchingOrdersFinished = (state: OrdersStore, action: StoreAction): OrdersStore =>
     ({ ...state, ordersLoaded: !action.payload.error, ordersLoading: false, fetchingOrdersFailed: action.payload.error });
@@ -34,13 +37,22 @@ const saveOrders = (state: OrdersStore, action: StoreAction): OrdersStore =>
     ({ ...state, orders: action.payload.orders, ordersLoading: false, ordersLoaded: true, draftOrder: getEmptyDraftBurger()});
 
 const burgerOrderStarted = (state: OrdersStore): OrdersStore =>
-    ({ ...state, burgerOrderStarted: true, burgerOrderSuccessful: false, burgerOrderFailed: false});
+    ({ ...state, ...getBurgerOrderInitialState() , burgerOrderStarted: true});
+
+const orderBurger = (state: OrdersStore, action: StoreAction): OrdersStore =>
+    ({ ...state, draftOrder: getEmptyDraftBurger(), orders: [...state.orders, action.payload]});
 
 const burgerOrderCompleted = (state: OrdersStore, action: StoreAction): OrdersStore =>
     ({ ...state, burgerOrderStarted: true, burgerOrderSuccessful: !action.payload.error, burgerOrderFailed: action.payload.error});
 
-const orderBurger = (state: OrdersStore, action: StoreAction): OrdersStore =>
-    ({ ...state, draftOrder: getEmptyDraftBurger(), orders: [...state.orders, action.payload]});
+const deleteBurgerStarted = (state: OrdersStore): OrdersStore =>
+    ({ ...state, ...getDeleteBurgerInitialState(), deleteBurgerStarted: true});
+
+const deleteBurger = (state: OrdersStore, action: StoreAction): OrdersStore =>
+    ({ ...state, orders: [...state.orders.filter(order => order.id !== action.payload.id)]});
+
+const deleteBurgerCompleted = (state: OrdersStore, action: StoreAction): OrdersStore =>
+    ({ ...state, deleteBurgerStarted: true, deleteBurgerSuccessful: !action.payload.error, deleteBurgerFailed: action.payload.error});
 
 const getEmptyDraftBurger = (): PartialOrder =>
     ({ ingredients: {salad: 0, bacon: 0, cheese: 0, meat: 0}, price: 0});
@@ -48,10 +60,25 @@ const getEmptyDraftBurger = (): PartialOrder =>
 const getOrdersStoreInitialState = (): OrdersStore => ({
     orders: [],
     draftOrder: getEmptyDraftBurger(),
-    ordersLoaded: false,
-    ordersLoading: false,
-    fetchingOrdersFailed: false,
+    ...getOrdersInitialState(),
+    ...getBurgerOrderInitialState(),
+    ...getDeleteBurgerInitialState()
+});
+
+const getBurgerOrderInitialState = (): {burgerOrderStarted: boolean, burgerOrderSuccessful: boolean, burgerOrderFailed: boolean} => ({
     burgerOrderStarted: false,
     burgerOrderSuccessful: false,
     burgerOrderFailed: false
+});
+
+const getOrdersInitialState = (): {ordersLoaded: boolean, ordersLoading: boolean, fetchingOrdersFailed: boolean} => ({
+    ordersLoaded: false,
+    ordersLoading: false,
+    fetchingOrdersFailed: false
+});
+
+const getDeleteBurgerInitialState = (): {deleteBurgerStarted: boolean, deleteBurgerSuccessful: boolean, deleteBurgerFailed: boolean} => ({
+    deleteBurgerStarted: false,
+    deleteBurgerSuccessful: false,
+    deleteBurgerFailed: false
 });

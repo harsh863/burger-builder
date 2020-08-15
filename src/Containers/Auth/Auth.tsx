@@ -11,7 +11,7 @@ import {RandomColorUtils} from "../../Utils/random-color.utils";
 import {RouteComponentProps, withRouter} from "react-router";
 import {RoutePaths} from "../../Enum/route-paths.enum";
 import {anonymousGuard} from "../../HOC/Guards/anonymous.guard";
-import {ArrowBack, ArrowBackIos} from "@material-ui/icons";
+import {ArrowBackIos} from "@material-ui/icons";
 
 class Auth extends PureComponent<AuthProps, AuthState> {
     state = {
