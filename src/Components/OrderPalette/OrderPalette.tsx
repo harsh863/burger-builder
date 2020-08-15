@@ -7,7 +7,7 @@ export class OrderPalette extends Component<OrderPaletteProps> {
 
     getParsedIngredients = () => {
         // @ts-ignore
-        return Object.keys(this.props.order.ingredients).map(key => `${key} (${this.props.order.ingredients[key]})`)
+        return Object.keys(this.props.order.ingredients).filter(key => this.props.order.ingredients[key] > 0).map(key => `${key} (${this.props.order.ingredients[key]})`)
     }
 
     render() {
