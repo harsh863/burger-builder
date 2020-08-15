@@ -154,7 +154,7 @@
     &__main-block {
       box-shadow: unset;
       width: 100%;
-      height: calc(100% - 110px);
+      height: max-content;
 
       &__empty-div {
         display: none;
@@ -166,12 +166,6 @@
         padding: 50px 30px 0;
       }
     }
-  }
-}
-
-@media (max-width: 374px) {
-  .auth-container__main-block {
-    height: calc(100% - 180px);
   }
 }
 
