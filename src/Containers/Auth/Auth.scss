@@ -4,7 +4,8 @@
 
 .auth-container {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  overflow-y: scroll;
   display: flex;
   background-image: linear-gradient(to right, lemonchiffon 50%, white 50%);
   justify-content: center;
@@ -127,6 +128,10 @@
     top: 0;
     @extend .auth-container__title;
   }
+
+  &::-webkit-scrollbar{
+    display: none;
+  }
 }
 
 @media (max-width: 650px) {
@@ -145,7 +150,7 @@
     &__main-block {
       box-shadow: unset;
       width: 100%;
-      height: calc(100vh - 85px);
+      min-height: calc(100vh - 85px);
 
       &__empty-div {
         display: none;
@@ -153,7 +158,8 @@
 
       &__login-block {
         width: 100%;
-        padding: 50px 30px;
+        min-height: 450px;
+        padding: 50px 30px 0;
       }
     }
   }
