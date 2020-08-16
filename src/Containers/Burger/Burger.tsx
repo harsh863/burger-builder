@@ -1,4 +1,4 @@
-import React, {Component, Suspense} from "react";
+import React, {Component, Fragment} from "react";
 import {BurgerDisplayWindow} from "../../Components/BurgerDisplayWindow/BurgerDisplayWindow";
 import {IngredientControllerContext} from "../../Context/IngredientControllerContext";
 import {IngredientsController} from "../../Components/IngredientsController/IngredientsController";
@@ -13,14 +13,25 @@ import * as actions from '../../Store/Actions/combined-action';
 import './Burger.scss';
 import {PartialOrder} from "../../Models/order.model";
 import {authGuard} from "../../HOC/Guards/auth.guard";
+import {NotificationService} from "../../Services/notification.service";
+import OrderCard from "../../Components/OrderCard/OrderCard";
 
-const OrderCard = React.lazy(() => import('../../Components/OrderCard/OrderCard'));
-
+const INGREDIENTS_EXCEED_LIMIT  = 10;
 class Burger extends Component<BurgerContainerProps, BurgerContainerState> {
     state = {
         isOrderCardVisible: false,
         requests: { continueOrder: false },
-        showBurgerOverview: true
+        showBurgerOverview: true,
+        previousIngredientsCount: 0
+    }
+    private _notificationService = NotificationService.getInstance();
+
+    UNSAFE_componentWillReceiveProps(nextProps: Readonly<BurgerContainerProps>, nextContext: any) {
+        const ingredientCount = Object.values(nextProps.ingredients).reduce((a, b) => a + b, 0);
+        if (ingredientCount  > INGREDIENTS_EXCEED_LIMIT && this.state.previousIngredientsCount < ingredientCount && ingredientCount - 1 === INGREDIENTS_EXCEED_LIMIT) {
+            this._notificationService.showNotification("Adding too much ingredients can ruin the taste of your burger", "info");
+        }
+        this.setState({previousIngredientsCount: ingredientCount});
     }
 
     componentDidMount() {
@@ -59,7 +70,7 @@ class Burger extends Component<BurgerContainerProps, BurgerContainerState> {
 
     render() {
         return (
-            <React.Fragment>
+            <Fragment>
                 <Header/>
                 {
                     this.state.showBurgerOverview ?
@@ -72,17 +83,14 @@ class Burger extends Component<BurgerContainerProps, BurgerContainerState> {
                 </IngredientControllerContext.Provider>
                 {
                     this.state.isOrderCardVisible ?
-                        <Suspense fallback={<div/>}>
-                            <OrderCard ingredients={this.props.ingredients}
-                                       requestInProgress={this.state.requests.continueOrder}
-                                       price={this.props.price}
-                                       show={this.state.isOrderCardVisible}
-                                       onClose={this.onOrderCardClose}
-                                       onOrder={this.saveOrder} />
-                        </Suspense> :
-                        null
+                        <OrderCard ingredients={this.props.ingredients}
+                                   requestInProgress={this.state.requests.continueOrder}
+                                   price={this.props.price}
+                                   show={this.state.isOrderCardVisible}
+                                   onClose={this.onOrderCardClose}
+                                   onOrder={this.saveOrder} /> : null
                 }
-            </React.Fragment>
+            </Fragment>
         )
     }
 }
@@ -116,4 +124,5 @@ interface BurgerContainerState {
     isOrderCardVisible: boolean;
     requests: { continueOrder: boolean };
     showBurgerOverview: boolean;
+    previousIngredientsCount: number;
 }

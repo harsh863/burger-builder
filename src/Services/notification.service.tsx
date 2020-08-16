@@ -12,7 +12,7 @@ export class NotificationService {
         return NotificationService.instance;
     }
 
-    showNotification = (message: string, type: 'success' | 'error', direction: 'left' | 'down' | 'right' | 'up' = 'left') => {
+    showNotification = (message: string, type: 'success' | 'error' | 'info', direction: 'left' | 'down' | 'right' | 'up' = 'left') => {
         const overlayDiv = document.createElement('div');
         overlayDiv.id = 'overlayDiv';
         document.body.appendChild(overlayDiv);

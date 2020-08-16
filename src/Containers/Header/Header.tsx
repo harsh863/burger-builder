@@ -1,4 +1,4 @@
-import React, {Component, Suspense} from "react";
+import React, {Component, Suspense, Fragment} from "react";
 import {AppLogo} from "../../Components/AppLogo/AppLogo";
 import './Header.scss';
 import {NavigationItems} from "../../Components/NavigationItems/NavigationItems";
@@ -30,7 +30,7 @@ export class Header extends Component<any, HeaderState>{
 
     render() {
         return (
-            <React.Fragment>
+            <Fragment>
                 <div className='app-bar'>
                     {
                         this.state.desktopMode ? null :
@@ -60,7 +60,7 @@ export class Header extends Component<any, HeaderState>{
                         </Suspense> :
                         null
                 }
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

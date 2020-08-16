@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import {Ingredient} from "../../Models/ingredient.model";
 import {Button} from "@material-ui/core";
 import {BurgerDisplayWindow} from "../../Components/BurgerDisplayWindow/BurgerDisplayWindow";
@@ -35,7 +35,7 @@ class Checkout extends Component<CheckoutProps,CheckoutState> {
         // @ts-ignore
         const ingredients: Ingredient = this.props.draftOrder.ingredients;
         return (
-            <React.Fragment>
+            <Fragment>
                 <Header/>
                 <div className='checkout'>
                     <Prompt when={this.state.showPrompt} message="Doing this will clear all your ingredients of this burger... Still Want To Proceed?"/>
@@ -48,7 +48,7 @@ class Checkout extends Component<CheckoutProps,CheckoutState> {
                         <Button className="success" size='medium' onClick={this.onContinueClicked}>Continue</Button>
                     </div>
                 </div>
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

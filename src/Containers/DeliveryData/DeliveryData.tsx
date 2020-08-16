@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import './DeliveryData.scss';
 import {Input} from "../../Helper/FormItems/Input/Input";
 import {FormSelect} from "../../Helper/FormItems/FormSelect/FormSelect";
@@ -61,7 +61,13 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
         const ingredientCount = Object.values(this.props.draftOrder.ingredients).reduce((a, b) => a + b, 0);
         if (ingredientCount < 1) {
             this.setState({showPrompt: false});
-            // setTimeout(() => this.props.history.push({ pathname: RoutePaths.NOT_FOUND, state: {message: 'Invalid Path'} }));
+            setTimeout(() => this.props.history.push({ pathname: RoutePaths.NOT_FOUND, state: {message: 'Invalid Path'} }));
+        }
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps: Readonly<DeliveryDataProps>, nextContext: any) {
+        if (nextProps.orderSuccessful) {
+            this.setState({showPrompt: false});
         }
     }
 
@@ -100,7 +106,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
 
     render() {
         return (
-            <React.Fragment>
+            <Fragment>
                 <Header />
                 <div className="delivery-form-container">
                     <Prompt when={this.state.showPrompt || this.shouldDisableFormFields()}
@@ -176,7 +182,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                             <LinearProgress style={{width: '100%', marginTop: '10px', borderRadius: '10px'}} color='primary'/> : null
                     }
                 </div>
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

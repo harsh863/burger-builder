@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import {Order} from "../../Models/order.model";
 import {NotificationService} from "../../Services/notification.service";
 import {OrderPalette} from "../../Components/OrderPalette/OrderPalette";
@@ -42,7 +42,7 @@ class MyOrders extends Component<MyOrdersContainerProps, any>{
 
     render() {
         return (
-            <React.Fragment>
+            <Fragment>
                 <Header />
                 {
                     this.props.loading || this.props.error ?
@@ -62,7 +62,7 @@ class MyOrders extends Component<MyOrdersContainerProps, any>{
                             }
                         </div>
                 }
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

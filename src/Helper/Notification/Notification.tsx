@@ -32,5 +32,5 @@ interface NotificationProps {
     message: string;
     direction: 'left' | 'down' | 'right' | 'up';
     onClose: (closed: boolean) => void;
-    type: 'success' | 'error';
+    type: 'success' | 'error' | 'info';
 }

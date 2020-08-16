@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import {Order} from "../../Models/order.model";
 import './OrderPalette.scss';
 import {BurgerDisplayWindow} from "../BurgerDisplayWindow/BurgerDisplayWindow";
@@ -38,7 +38,7 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
 
     render() {
         return (
-            <React.Fragment>
+            <Fragment>
                 <div onContextMenu={this.openContextMenu} style={{ cursor: 'context-menu' }} className="order-palette">
                     <div className="order-palette__details">
                         <div className="order-palette__details__ingredients-block">
@@ -59,7 +59,7 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
                     anchorPosition={{ top: this.state.mouseY, left: this.state.mouseX }}>
                     <MenuItem onClick={this.deleteOrder}>Delete Order</MenuItem>
                 </Menu>
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

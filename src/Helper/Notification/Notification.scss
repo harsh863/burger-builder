@@ -38,3 +38,10 @@
     background: #ff9898;
   }
 }
+
+.info {
+  & .MuiSnackbarContent-root {
+    border: 1.5px solid #bfa200f7;
+    background: #ecd970;
+  }
+}

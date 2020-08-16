@@ -1,4 +1,4 @@
-import React, {PureComponent} from "react";
+import React, {PureComponent, Fragment} from "react";
 import {connect} from "react-redux";
 import {AuthStore} from "../../Models/auth-store.model";
 import {Input} from "../../Helper/FormItems/Input/Input";
@@ -148,13 +148,13 @@ class Auth extends PureComponent<AuthProps, AuthState> {
                                     {!this.state.isResetPasswordMode ? 'Forgot Password ?' : <ArrowBackIos color="primary"/> }
                                 </div>
                             </Tooltip>
-                            <React.Fragment>
+                            <Fragment>
                                 {
                                     this.state.isLoginMode ?
                                         <div className="auth-container__main-block__login-block__footer__navigate-link"><p>Don't have an account? </p><strong className={this.shouldDisableFields() ? "disable" : ""} onClick={_ => this.changeLoginMode()}>Sign Up</strong></div> :
                                         <div className="auth-container__main-block__login-block__footer__navigate-link"><p>Already have an account? </p><strong className={this.shouldDisableFields() ? "disable" : ""} onClick={_ => this.changeLoginMode()}>Login</strong></div>
                                 }
-                            </React.Fragment>
+                            </Fragment>
                         </div>
                     </div>
                 </div>
