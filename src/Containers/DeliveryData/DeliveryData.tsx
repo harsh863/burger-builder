@@ -16,9 +16,20 @@ import * as actions from '../../Store/Actions/combined-action';
 import {AuthStore} from "../../Models/auth-store.model";
 
 class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
-    options = [
-        {value: 'normal', displayName: 'Normal'},
-        {value: 'fastest', displayName: 'Fastest ( ₹ 20 extra )'}
+    deliveryOptions = [
+        {value: 'normal', displayName: 'Normal', meta: {iconUrl: "https://img.icons8.com/cotton/20/000000/delivery.png"}},
+        {value: 'fastest', displayName: 'Fastest ( ₹ 50 extra )', meta: {iconUrl: "https://img.icons8.com/nolan/20/fast-cart.png"}}
+    ];
+    countryOptions = [
+        {value: 'india', displayName: 'India', meta: {iconUrl: "https://img.icons8.com/color/17/000000/india.png"}},
+        {value: 'usa', displayName: 'USA', meta: {iconUrl: "https://img.icons8.com/color/17/000000/usa.png"}},
+        {value: 'canada', displayName: 'Canada', meta: {iconUrl: "https://img.icons8.com/color/17/000000/canada.png"}},
+        {value: 'sri lanka', displayName: 'Sri Lanka', meta: {iconUrl: "https://img.icons8.com/color/17/000000/sri-lanka.png"}},
+        {value: 'brazil', displayName: 'Brazil', meta: {iconUrl: "https://img.icons8.com/color/17/000000/brazil.png"}},
+        {value: 'peru', displayName: 'Peru', meta: {iconUrl: "https://img.icons8.com/color/17/000000/peru.png"}},
+        {value: 'colombia', displayName: 'Colombia', meta: {iconUrl: "https://img.icons8.com/color/17/000000/colombia.png"}},
+        {value: 'spain', displayName: 'Spain', meta: {iconUrl: "https://img.icons8.com/color/17/000000/spain-2.png"}},
+        {value: 'qatar', displayName: 'Qatar', meta: {iconUrl: "https://img.icons8.com/color/17/000000/qatar.png"}}
     ];
     state = {
         form: {
@@ -28,19 +39,20 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
             address: {
                 street: '',
                 zip: '',
-                country: ''
+                country: this.countryOptions[0].value
             },
-            delivery_method: this.options[0].value
+            delivery_method: this.deliveryOptions[0].value
         },
         fieldValidityState: {
             name: false,
-            street: false,
-            zip: false,
-            country: false,
             email: false,
             contact_number: false,
+            street: false,
+            zip: false,
+            country: true,
             delivery_method: true
         },
+        showPrompt: true,
         isFormValid: false,
     };
     private _notificationService = NotificationService.getInstance();
@@ -48,7 +60,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
     componentDidMount() {
         const ingredientCount = Object.values(this.props.draftOrder.ingredients).reduce((a, b) => a + b, 0);
         if (ingredientCount < 1) {
-            this.setState({fieldValidityState: {deliveryMethod: false}});
+            this.setState({showPrompt: false});
             setTimeout(() => this.props.history.push({ pathname: RoutePaths.NOT_FOUND, state: {message: 'Invalid Path'} }));
         }
     }
@@ -79,10 +91,10 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
     }
 
     submit = () => {
-        this.props.orderBurger({...this.props.draftOrder, price: this.props.draftOrder.price + (this.state.form.delivery_method === this.options[1].value ? 20 : 0), contact: this.state.form, userId: this.props.userId});
+        this.props.orderBurger({...this.props.draftOrder, price: this.props.draftOrder.price + (this.state.form.delivery_method === this.deliveryOptions[1].value ? 50 : 0), contact: this.state.form, userId: this.props.userId});
     }
 
-    isFormFieldsValid = (): boolean => {
+    shouldDisableFormFields = (): boolean => {
         return (this.props.orderStarted && !(this.props.orderSuccessful || this.props.orderFailed));
     }
 
@@ -91,7 +103,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
             <React.Fragment>
                 <Header />
                 <div className="delivery-form-container">
-                    <Prompt when={!!Object.values(this.state.fieldValidityState).filter(valid => valid).length && !(this.props.orderSuccessful || this.props.orderFailed)}
+                    <Prompt when={this.state.showPrompt || this.shouldDisableFormFields()}
                             message="Are you sure you want to leave without ordering this burger?"/>
 
                     <h2 className="delivery-form-container__header-text">Enter Your Delivery Data</h2>
@@ -99,7 +111,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <Input value={this.state.form.name}
                                label="Name" placeholder="Name"
-                               required disabled={this.isFormFieldsValid()}
+                               required disabled={this.shouldDisableFormFields()}
                                onChange={event => this.updateForm('name', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('name', event)} />
                     </div>
@@ -107,7 +119,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <Input value={this.state.form.email}
                                label="Email" placeholder="Email" type="email"
-                               required disabled={this.isFormFieldsValid()}
+                               required disabled={this.shouldDisableFormFields()}
                                onChange={event => this.updateForm('email', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('email', event)} />
                     </div>
@@ -116,7 +128,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                         <Input value={this.state.form.contact_number}
                                label="Contact Number" placeholder="Contact Number"
                                type="tel"
-                               required disabled={this.isFormFieldsValid()}
+                               required disabled={this.shouldDisableFormFields()}
                                onChange={event => this.updateForm('contact_number', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('contact_number', event)} />
                     </div>
@@ -124,7 +136,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <Input value={this.state.form.address.street}
                                label="Street" placeholder="Street"
-                               required disabled={this.isFormFieldsValid()}
+                               required disabled={this.shouldDisableFormFields()}
                                onChange={event => this.updateForm('address.street', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('street', event)} />
                     </div>
@@ -133,34 +145,34 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                         <Input value={this.state.form.address.zip}
                                label="ZIP Code" placeholder="ZIP Code"
                                type="number"
-                               required disabled={this.isFormFieldsValid()}
+                               required disabled={this.shouldDisableFormFields()}
                                onChange={event => this.updateForm('address.zip', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('zip', event)} />
                     </div>
 
                     <div className="delivery-form-container__input-container">
-                        <Input value={this.state.form.address.country}
-                               label="Country" placeholder="Country"
-                               required disabled={this.isFormFieldsValid()}
-                               onChange={event => this.updateForm('address.country', event.target.value)}
-                               onValidityChange={event => this.updateFormValidity('country', event)} />
+                        <FormSelect value={this.state.form.address.country}
+                                    label="Country" options={this.countryOptions}
+                                    disabled={this.shouldDisableFormFields()}
+                                    onSelect={event => this.updateForm('address.country', event.target.value)}/>
                     </div>
 
                     <div className="delivery-form-container__input-container">
                         <FormSelect value={this.state.form.delivery_method}
-                                    label="Delivery Method" options={this.options}
-                                    disabled={this.isFormFieldsValid()}
+                                    label="Delivery Method" options={this.deliveryOptions}
+                                    disabled={this.shouldDisableFormFields()}
                                     onSelect={event => this.updateForm('delivery_method', event.target.value)} />
                     </div>
 
                     <div className="delivery-form-container__input-container">
                         <Button className="delivery-form-container__input-container__order-button"
-                                variant="contained" color="primary" disabled={false}
+                                variant="contained" color="primary"
+                                disabled={!this.state.isFormValid || this.shouldDisableFormFields()}
                                 onClick={this.submit}>Order</Button>
                     </div>
 
                     {
-                        this.isFormFieldsValid() ?
+                        this.shouldDisableFormFields() ?
                             <LinearProgress style={{width: '100%', marginTop: '10px', borderRadius: '10px'}} color='primary'/> : null
                     }
                 </div>
@@ -194,6 +206,15 @@ interface DeliveryDataProps extends RouteComponentProps {
 
 interface DeliveryDataState {
     form: DeliveryDetail;
-    fieldValidityState: {};
+    showPrompt: boolean;
+    fieldValidityState: {
+        name: boolean;
+        email: boolean;
+        street: boolean;
+        zip: boolean;
+        contact_number: boolean;
+        country: boolean;
+        delivery_method: boolean;
+    }
     isFormValid: boolean;
 }

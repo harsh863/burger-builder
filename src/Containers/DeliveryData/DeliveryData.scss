@@ -21,5 +21,12 @@
     &__order-button{
       width: 100%;
     }
+
+    & .MuiInputBase-root {
+      & .MuiSelect-root {
+        display: flex;
+        align-items: center;
+      }
+    }
   }
 }
