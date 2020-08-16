@@ -21,6 +21,7 @@ export class Input extends Component<InputProps, InputState> {
         this.requiredErrorHandler(value);
         this.mobileErrorHandler(value);
         this.emailErrorHandler(value);
+        this.lengthErrorHandler(value);
     }
 
     onBlur = (event: any) => {
@@ -29,6 +30,7 @@ export class Input extends Component<InputProps, InputState> {
         this.requiredErrorHandler(value);
         this.mobileErrorHandler(value);
         this.emailErrorHandler(value);
+        this.lengthErrorHandler(value);
     }
 
     mobileErrorHandler = (value: string) => {
@@ -61,6 +63,23 @@ export class Input extends Component<InputProps, InputState> {
         if (this.props.required && !!value) {
             this.setState({invalid: false, message: ''});
             this.props.onValidityChange(false);
+        }
+    }
+
+    lengthErrorHandler = (value: string) => {
+        if (value.length > 0) {
+            if (!!this.props.length) {
+                const fieldInvalidCondition = +(this.props.length + '') !== +value.length;
+                this.setState(state => ({...state, invalid: fieldInvalidCondition, message: fieldInvalidCondition ? ErrorMessage.LENGTH.replace('_', this.props.length + '') : ''}));
+            }
+            if (!!this.props.minLength) {
+                const fieldInvalidCondition = +(this.props.minLength + '') > +value.length;
+                this.setState(state => ({...state, invalid: fieldInvalidCondition, message: fieldInvalidCondition ? ErrorMessage.MIN_LENGTH.replace('_', this.props.minLength + '') : ''}));
+            }
+            if (!!this.props.maxLength) {
+                const fieldInvalidCondition = +(this.props.maxLength + '') < +value.length;
+                this.setState(state => ({...state, invalid: fieldInvalidCondition, message: fieldInvalidCondition ? ErrorMessage.MAX_LENGTH.replace('_', this.props.maxLength + '') : ''}));
+            }
         }
     }
 
@@ -120,6 +139,9 @@ interface InputProps {
     onChange: (event: any) => void;
     onValidityChange: (invalid: boolean) => void;
     focused?: boolean;
+    length?: number;
+    minLength?: number;
+    maxLength?: number;
     onBlur?: (event: any) => void;
 }
 

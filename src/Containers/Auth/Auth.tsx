@@ -124,6 +124,7 @@ class Auth extends PureComponent<AuthProps, AuthState> {
                                     <div className="auth-container__main-block__login-block__form-block__input-container">
                                         <Input value={this.state.form.password}
                                                label="Password" placeholder="Password" type="password"
+                                               minLength={6}
                                                required disabled={this.shouldDisableFields()}
                                                onChange={event => this.updateForm('password', event.target.value)}
                                                onValidityChange={event => this.updateFormValidity('password', event)} />

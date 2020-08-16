@@ -61,7 +61,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
         const ingredientCount = Object.values(this.props.draftOrder.ingredients).reduce((a, b) => a + b, 0);
         if (ingredientCount < 1) {
             this.setState({showPrompt: false});
-            setTimeout(() => this.props.history.push({ pathname: RoutePaths.NOT_FOUND, state: {message: 'Invalid Path'} }));
+            // setTimeout(() => this.props.history.push({ pathname: RoutePaths.NOT_FOUND, state: {message: 'Invalid Path'} }));
         }
     }
 
@@ -144,7 +144,7 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
                     <div className="delivery-form-container__input-container">
                         <Input value={this.state.form.address.zip}
                                label="ZIP Code" placeholder="ZIP Code"
-                               type="number"
+                               type="number" length={6}
                                required disabled={this.shouldDisableFormFields()}
                                onChange={event => this.updateForm('address.zip', event.target.value)}
                                onValidityChange={event => this.updateFormValidity('zip', event)} />
