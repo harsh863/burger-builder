@@ -3,12 +3,22 @@ import {Order} from "../../Models/order.model";
 import './OrderPalette.scss';
 import {BurgerDisplayWindow} from "../BurgerDisplayWindow/BurgerDisplayWindow";
 import {MenuItem, Menu} from "@material-ui/core";
+import {Ingredient} from "../../Models/ingredient.model";
 
 export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState> {
     state = {
         openMenu: false,
         mouseX: 0,
         mouseY: 0
+    }
+
+    getIngredientsInCorrectOrder = (): Ingredient => {
+        return {
+            salad: this.props.order.ingredients.salad,
+            bacon: this.props.order.ingredients.bacon,
+            cheese: this.props.order.ingredients.cheese,
+            meat: this.props.order.ingredients.meat
+        }
     }
 
     getParsedIngredients = () => {
@@ -50,7 +60,7 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
                         </div>
                     </div>
                     <div className="order-palette__burger-overview">
-                        <BurgerDisplayWindow ingredients={this.props.order.ingredients} smallView />
+                        <BurgerDisplayWindow ingredients={this.getIngredientsInCorrectOrder()} smallView />
                     </div>
                 </div>
                 <Menu
