@@ -14,6 +14,7 @@ import {OrdersStore} from "../../Models/orders-store.model";
 import {connect} from "react-redux";
 import * as actions from '../../Store/Actions/combined-action';
 import {AuthStore} from "../../Models/auth-store.model";
+import moment from 'moment';
 
 class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
     deliveryOptions = [
@@ -97,7 +98,17 @@ class DeliveryData extends Component<DeliveryDataProps, DeliveryDataState> {
     }
 
     submit = () => {
-        this.props.orderBurger({...this.props.draftOrder, price: this.props.draftOrder.price + (this.state.form.delivery_method === this.deliveryOptions[1].value ? 50 : 0), contact: this.state.form, userId: this.props.userId});
+        const isFastestDelivery = this.state.form.delivery_method === this.deliveryOptions[1].value;
+        const currentTime = moment(new Date());
+        const deliveryTime = currentTime.add(isFastestDelivery ? 30 : 60, 'minutes').toDate();
+        this.props.orderBurger({
+            ...this.props.draftOrder,
+            price: this.props.draftOrder.price + (isFastestDelivery ? 50 : 0),
+            contact: this.state.form,
+            userId: this.props.userId,
+            delivery_time: deliveryTime,
+            order_time: moment(new Date()).toDate()
+        });
     }
 
     shouldDisableFormFields = (): boolean => {

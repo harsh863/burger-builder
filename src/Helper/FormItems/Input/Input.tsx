@@ -81,7 +81,7 @@ export class Input extends Component<InputProps, InputState> {
             if (!!this.props.maxLength) {
                 const fieldInvalidCondition = +(this.props.maxLength + '') < +value.length;
                 this.setState(state => ({...state, invalid: fieldInvalidCondition, message: fieldInvalidCondition ? ErrorMessage.MAX_LENGTH.replace('_', this.props.maxLength + '') : ''}));
-                this.props.onValidityChange(fieldInvalidCondition);
+                this.props.onValidityChange(fieldInvalidCondition)  ;
             }
         }
     }

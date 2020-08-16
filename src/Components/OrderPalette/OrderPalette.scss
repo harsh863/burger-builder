@@ -32,6 +32,20 @@
         cursor: grab;
       }
     }
+
+    &__status-block {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      p {
+        margin: 5px 5px 5px 0;
+      }
+
+      strong {
+        margin-right: 5px;
+      }
+    }
   }
 
   &__burger-overview {

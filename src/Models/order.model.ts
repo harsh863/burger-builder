@@ -7,6 +7,8 @@ export interface Order {
     price: number;
     ingredients: Ingredient;
     userId: string;
+    delivery_time: Date;
+    order_time: Date;
 }
 
 export interface PartialOrder {
