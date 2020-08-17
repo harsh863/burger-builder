@@ -12,8 +12,13 @@ import {NotificationService} from "../../Services/notification.service";
 
 export class Invoice extends Component<InvoiceProps, InvoiceState> {
     state = {
-        loading: false
+        loading: false,
+        invoiceNo: ''
     };
+
+    componentDidMount() {
+        this.setState({invoiceNo: (this.props.order?.id + '').substr(-3).toUpperCase() + ' ' + (Math.random() * 100000).toFixed(0).toString()})
+    }
 
     getIngredientPrice = (name: string): number => {
         const ingredient = Object.entries(Ingredients).find(entry => entry[1] === name);
@@ -33,7 +38,7 @@ export class Invoice extends Component<InvoiceProps, InvoiceState> {
             const img = canvas.toDataURL('image/png');
             const pdf = new JSPdf("p", "mm", "a4");
             pdf.addImage({imageData: img, x: 0, y: 0, width: 210, height: 297});
-            pdf.save("invoice.pdf");
+            pdf.save(`${this.state.invoiceNo}.pdf`);
             this.setState({loading: false});
             setTimeout(_ => {
                 this.props.onClose(true);
@@ -63,7 +68,7 @@ export class Invoice extends Component<InvoiceProps, InvoiceState> {
                     <div className="invoice-container__invoice-details">
                         <div className="invoice-container__invoice-details__row">
                             <div className="invoice-container__invoice-details__row__label">Invoice No: </div>
-                            <div className="invoice-container__invoice-details__row__value"> {(this.props.order?.id + '').substr(-3).toUpperCase() + ' ' + (Math.random() * 100000).toFixed(0).toString()}</div>
+                            <div className="invoice-container__invoice-details__row__value"> {this.state.invoiceNo}</div>
                         </div>
                         <div className="invoice-container__invoice-details__row">
                             <div className="invoice-container__invoice-details__row__label">Date Issued: </div>
@@ -131,4 +136,5 @@ interface InvoiceProps {
 
 interface InvoiceState {
     loading: boolean;
+    invoiceNo: string;
 }
