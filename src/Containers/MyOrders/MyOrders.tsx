@@ -16,7 +16,10 @@ import {RoutePaths} from "../../Enum/route-paths.enum";
 import {authGuard} from "../../HOC/Guards/auth.guard";
 import {Link} from "react-router-dom";
 
-class MyOrders extends Component<MyOrdersContainerProps, any>{
+class MyOrders extends Component<MyOrdersContainerProps, MyOrdersContainerState>{
+    state = {
+        isOrderDelete: true
+    };
     private _notificationService = NotificationService.getInstance();
     private _spinnerService = SpinnerService.getInstance();
 
@@ -33,11 +36,16 @@ class MyOrders extends Component<MyOrdersContainerProps, any>{
             this._notificationService.showNotification('An unknown error occurred while fetching Orders from server', "error");
         }
         if (this.props.deleteBurgerFailed) {
-            this._notificationService.showNotification('Cancelling Order Failed', "error");
+            this._notificationService.showNotification(`${this.state.isOrderDelete ? 'Deleting' : 'Cancelling'} Order Failed`, "error");
         }
         if (this.props.deleteBurgerSuccessful) {
-            this._notificationService.showNotification('Order Cancelled Successfully', "success");
+            this._notificationService.showNotification(`Order ${this.state.isOrderDelete ? 'Deleted' : 'Cancelled'} Successfully`, "success");
         }
+    }
+
+    deleteOrder = (orderId: string, isDelete: boolean) => {
+        this.setState({isOrderDelete: isDelete});
+        this.props.deleteOrder(orderId);
     }
 
     render() {
@@ -54,7 +62,7 @@ class MyOrders extends Component<MyOrdersContainerProps, any>{
                             {
                                 this.props.orders.length ?
                                     this.props.orders.map((order: Order, index: string | number | undefined) =>
-                                        <OrderPalette key={index} order={order} onDelete={this.props.deleteOrder}/>) :
+                                        <OrderPalette key={index} order={order} onDelete={this.deleteOrder}/>) :
                                     <div className="my-order-container__no-orders-block">
                                         <h4 style={{color: RandomColorUtils.getRandomColor()}}>You haven't ordered anything yet.</h4>
                                         <p>Start creating your first burger by clicking <Link to={RoutePaths.BURGER_BUILDER}>here</Link></p>
@@ -96,4 +104,8 @@ interface MyOrdersContainerProps extends RouteComponentProps{
     userId: string;
     fetchOrders: (history: any, userId: string) => void;
     deleteOrder: (orderId: string) => void;
+}
+
+interface MyOrdersContainerState {
+    isOrderDelete: boolean;
 }

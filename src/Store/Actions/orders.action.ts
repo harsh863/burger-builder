@@ -92,12 +92,16 @@ export const postBurger = (order: Order) => {
 }
 
 export const deleteBurgerOrder = (orderId: string) => {
-    return (dispatch: any) => {
-        dispatch(deleteBurgerStart());
-        const ordersService = OrdersService.getInstance();
-        ordersService.deleteOrder(orderId).then(_ => {
-            dispatch(deleteBurger(orderId));
-            dispatch(deleteBurgerCompleted());
-        }).catch(_ => dispatch(deleteBurgerCompleted(true)));
+    return (dispatch: any, getState: any) => {
+        if (!(getState().orders.deleteBurgerStarted && !(getState().orders.deleteBurgerSuccessful || getState().orders.deleteBurgerFailed))) {
+            dispatch(deleteBurgerStart());
+            const ordersService = OrdersService.getInstance();
+            ordersService.deleteOrder(orderId).then(_ => {
+                dispatch(deleteBurger(orderId));
+                dispatch(deleteBurgerCompleted());
+            }).catch(_ => dispatch(deleteBurgerCompleted(true)));
+        } else {
+            dispatch(() => {});
+        }
     }
 }

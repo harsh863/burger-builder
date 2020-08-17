@@ -76,6 +76,10 @@ export class Invoice extends Component<InvoiceProps, InvoiceState> {
                                 <div className="invoice-container__invoice-details__row__label">Date Issued: </div>
                                 <div className="invoice-container__invoice-details__row__value">{moment(new Date()).format('MMMM DD, YYYY ( dddd )').toString()}</div>
                             </div>
+                            <div className="invoice-container__invoice-details__row">
+                                <div className="invoice-container__invoice-details__row__label">Delivered On: </div>
+                                <div className="invoice-container__invoice-details__row__value">{moment(this.props.order.delivery_time).format('MMMM DD, YYYY (hh:mm A)')}</div>
+                            </div>
                         </div>
                         <div className="invoice-container__order-details">
                             <div className="invoice-container__order-details__table-header">

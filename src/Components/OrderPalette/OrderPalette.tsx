@@ -33,7 +33,7 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
                 this.setState({isDelivered: true});
             }, (difference_from_delivery - 5) * 60 * 1000);
         }
-        this.setState({isDelivered: difference_from_delivery < 1});
+        this.setState({isDelivered: difference_from_delivery <= 5});
     }
 
     getParsedIngredients = () => {
@@ -54,10 +54,10 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
         this.setState({openMenu: false});
     };
 
-    deleteOrder = () => {
+    deleteOrder = (isDelete: boolean) => {
         this.closeContextMenu();
         if (this.props.order.id) {
-            this.props.onDelete(this.props.order?.id);
+            this.props.onDelete(this.props.order?.id, isDelete);
         }
     }
 
@@ -110,8 +110,8 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
                     anchorPosition={{ top: this.state.mouseY, left: this.state.mouseX }}>
                     {
                         this.state.isDelivered ?
-                            <MenuItem onClick={event => this.generateInvoice()}>Generate Invoice</MenuItem> :
-                            <MenuItem onClick={this.deleteOrder}>Cancel Order</MenuItem>
+                            [ <MenuItem key={1} onClick={event => this.deleteOrder(true)}>Delete Order</MenuItem>, <MenuItem key={2} onClick={event => this.generateInvoice()}>Generate Invoice</MenuItem>] :
+                            <MenuItem onClick={event => this.deleteOrder(false)}>Cancel Order</MenuItem>
                     }
                 </Menu>
                 {
@@ -125,7 +125,7 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
 
 interface OrderPaletteProps {
     order: Order;
-    onDelete: (id: string) => void;
+    onDelete: (id: string, isDelete: boolean) => void;
 }
 
 interface OrderPaletteState {
