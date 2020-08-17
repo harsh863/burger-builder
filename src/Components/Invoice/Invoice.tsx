@@ -8,6 +8,7 @@ import {Modal} from "../../Helper/Modal/Modal";
 import html2canvas from "html2canvas";
 import JSPdf from 'jspdf';
 import {MoonLoader} from "react-spinners";
+import {NotificationService} from "../../Services/notification.service";
 
 export class Invoice extends Component<InvoiceProps, InvoiceState> {
     state = {
@@ -21,7 +22,8 @@ export class Invoice extends Component<InvoiceProps, InvoiceState> {
     }
 
     getShippingFee = (): number => {
-        const totalIngredientAndExtraCharges = Object.keys(this.props.order.ingredients).map(key => this.getIngredientPrice(key)).reduce((a, b) => a + b, 0) + Prices.EXTRA + Prices.TOP_BREAD + Prices.BOTTOM_BREAD;
+        // @ts-ignore
+        const totalIngredientAndExtraCharges = Object.keys(this.props.order.ingredients).map(key => this.getIngredientPrice(key) * this.props.order.ingredients[key]).reduce((a, b) => a + b, 0) + Prices.EXTRA + Prices.TOP_BREAD + Prices.BOTTOM_BREAD;
         return this.props.order.price - totalIngredientAndExtraCharges;
     }
 
@@ -33,7 +35,11 @@ export class Invoice extends Component<InvoiceProps, InvoiceState> {
             pdf.addImage({imageData: img, x: 0, y: 0, width: 210, height: 297});
             pdf.save("invoice.pdf");
             this.setState({loading: false});
-            setTimeout(_ => this.props.onClose(true), 1000);
+            setTimeout(_ => {
+                this.props.onClose(true);
+                const notificationService = NotificationService.getInstance();
+                notificationService.showNotification('Invoice downloaded successfully', "success");
+            }, 1000);
         });
     }
 
@@ -109,7 +115,7 @@ export class Invoice extends Component<InvoiceProps, InvoiceState> {
                     {
                         !this.state.loading ?
                             <img onClick={this.downloadInvoice} src="https://img.icons8.com/carbon-copy/35/000000/download.png" alt=""/> :
-                            <MoonLoader color={'white'} size={30} />
+                            <MoonLoader color={'black'} size={30} />
                     }
                 </div>
             </Modal>
