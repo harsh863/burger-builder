@@ -1,9 +1,11 @@
-.MuiBackdrop-root {
-  min-height: 100vh !important;
-  height: max-content !important;
-  min-width: 100vw !important;
-  width: max-content !important;
-  padding: 40px;
-  box-sizing: border-box;
-  position: absolute !important;
+@media (min-width: 900px) {
+  .MuiBackdrop-root {
+    min-height: 100vh !important;
+    height: max-content !important;
+    min-width: 100vw !important;
+    width: max-content !important;
+    box-sizing: border-box;
+    padding: 40px;
+    position: absolute !important;
+  }
 }
