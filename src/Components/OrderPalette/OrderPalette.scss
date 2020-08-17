@@ -33,17 +33,37 @@
       }
     }
 
-    &__status-block {
+    &__price-block {
+      margin-top: 5px;
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      flex-wrap: wrap;
 
       p {
         margin: 5px 5px 5px 0;
       }
+    }
 
-      strong {
-        margin-right: 5px;
+    &__status-block {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+
+      p {
+        min-width: 115px;
+        margin: 5px 5px 5px 0;
+      }
+
+      & .status {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+
+        strong {
+          margin-right: 5px;
+        }
       }
     }
   }

@@ -33,10 +33,10 @@ class MyOrders extends Component<MyOrdersContainerProps, any>{
             this._notificationService.showNotification('An unknown error occurred while fetching Orders from server', "error");
         }
         if (this.props.deleteBurgerFailed) {
-            this._notificationService.showNotification('Deleting Order Failed', "error");
+            this._notificationService.showNotification('Cancelling Order Failed', "error");
         }
         if (this.props.deleteBurgerSuccessful) {
-            this._notificationService.showNotification('Order Deleted Successfully', "success");
+            this._notificationService.showNotification('Order Cancelled Successfully', "success");
         }
     }
 

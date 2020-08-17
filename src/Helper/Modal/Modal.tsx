@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Backdrop} from "@material-ui/core";
+import './Modal.scss';
 
 export class Modal extends Component<ModalProps> {
     stopEventPropagation = (event: any) => {

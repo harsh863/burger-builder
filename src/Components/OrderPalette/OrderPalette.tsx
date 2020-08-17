@@ -5,13 +5,15 @@ import {BurgerDisplayWindow} from "../BurgerDisplayWindow/BurgerDisplayWindow";
 import {MenuItem, Menu} from "@material-ui/core";
 import {Ingredient} from "../../Models/ingredient.model";
 import moment from 'moment';
+import {Invoice} from "../Invoice/Invoice";
 
 export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState> {
     state = {
         openMenu: false,
         mouseX: 0,
         mouseY: 0,
-        isDelivered: true
+        isDelivered: true,
+        showInvoice: false
     }
 
     getIngredientsInCorrectOrder = (): Ingredient => {
@@ -26,6 +28,11 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
     componentDidMount() {
         const currentTime = moment(new Date());
         const difference_from_delivery = moment(this.props.order.delivery_time).diff(currentTime, 'minutes');
+        if (difference_from_delivery > 1) {
+            setTimeout(() => {
+                this.setState({isDelivered: true});
+            }, (difference_from_delivery - 5) * 60 * 1000);
+        }
         this.setState({isDelivered: difference_from_delivery < 1});
     }
 
@@ -54,18 +61,26 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
         }
     }
 
+    generateInvoice = () => {
+        this.setState({openMenu: false, showInvoice: true});
+    }
+
+    onInvoiceWindowClose = (event: any) => {
+        this.setState({showInvoice: false});
+    }
+
     getDeliveryStatus = (delivery_time: Date, order_time: Date): any => {
         const currentTime = moment(new Date());
         const difference_from_delivery = moment(delivery_time).diff(currentTime, 'minutes');
         const difference_from_order = moment(currentTime).diff(order_time, 'minutes');
         if (difference_from_order <= 10) {
-            return <Fragment><strong style={{color: 'grey'}}>Packing</strong> <img src="https://img.icons8.com/material-two-tone/20/000000/packing.png"/></Fragment>;
+            return <div className="status"><strong style={{color: 'grey'}}>Packing</strong> <img src="https://img.icons8.com/material-two-tone/20/000000/packing.png" alt=""/></div>;
         } else if (difference_from_delivery > 5) {
-            return <Fragment><strong style={{color: 'cadetblue'}}>Arriving in {difference_from_delivery} minutes</strong> <img src="https://img.icons8.com/plasticine/20/000000/in-transit.png"/></Fragment>;
+            return <div className="status"><strong style={{color: 'cadetblue'}}>Arriving in {difference_from_delivery} minutes</strong> <img src="https://img.icons8.com/plasticine/20/000000/in-transit.png" alt=""/></div>;
         } else if (difference_from_delivery <= 5 && difference_from_delivery > 0) {
-            return <Fragment><strong style={{color: 'red'}}>Arrived at your location</strong> <img src="https://img.icons8.com/doodle/20/000000/user-location.png"/></Fragment>;
+            return <div className="status"><strong style={{color: 'red'}}>Arrived at your location</strong> <img src="https://img.icons8.com/doodle/20/000000/user-location.png" alt=""/></div>;
         } else if (difference_from_delivery < 1) {
-            return <Fragment><strong style={{color: 'green'}}>Delivered</strong> <img src="https://img.icons8.com/color/20/000000/data-arrived.png"/></Fragment>;
+            return <div className="status"><strong style={{color: 'green'}}>Delivered</strong> <img src="https://img.icons8.com/color/20/000000/data-arrived.png" alt=""/></div>;
         }
     }
 
@@ -79,7 +94,7 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
                             {this.getParsedIngredients().map(chipContent => <span key={chipContent} className="order-palette__details__ingredients-block__ingredient_chip">{chipContent}</span>)}
                         </div>
                         <div className="order-palette__details__price-block">
-                            <p>Total Price: <strong>₹ {this.props.order.price.toFixed(2)}</strong></p>
+                            <p>Total Price: </p><strong>₹ {this.props.order.price.toFixed(2)}</strong>
                         </div>
                         <div className="order-palette__details__status-block">
                             <p>Delivery Status: </p>{this.getDeliveryStatus(this.props.order.delivery_time, this.props.order.order_time)}
@@ -93,8 +108,16 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
                     keepMounted open={this.state.openMenu} onClose={this.closeContextMenu} className="delete-order"
                     anchorReference="anchorPosition"
                     anchorPosition={{ top: this.state.mouseY, left: this.state.mouseX }}>
-                    <MenuItem onClick={this.deleteOrder}>{this.state.isDelivered ? 'Delete' : 'Cancel'} Order</MenuItem>
+                    {
+                        this.state.isDelivered ?
+                            <MenuItem onClick={event => this.generateInvoice()}>Generate Invoice</MenuItem> :
+                            <MenuItem onClick={this.deleteOrder}>Cancel Order</MenuItem>
+                    }
                 </Menu>
+                {
+                    this.state.showInvoice ?
+                        <Invoice open={this.state.showInvoice} order={this.props.order} onClose={this.onInvoiceWindowClose} /> : null
+                }
             </Fragment>
         );
     }
@@ -110,4 +133,5 @@ interface OrderPaletteState {
     mouseX: number;
     mouseY: number;
     isDelivered: boolean;
+    showInvoice: boolean;
 }
