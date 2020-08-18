@@ -35,24 +35,30 @@ export class Invoice extends Component<InvoiceProps, InvoiceState> {
 
     downloadInvoice = () => {
         this.setState({loading: true});
-        html2canvas(document.getElementById('invoice-container') as HTMLElement).then((canvas) =>  {
+        html2canvas(document.getElementById('invoice-container') as HTMLElement).then((canvas: HTMLCanvasElement) =>  {
             const img = canvas.toDataURL('image/png');
             const pdf = new JSPdf("p", "mm", "a4");
             pdf.addImage({imageData: img, x: 0, y: 0, width: 210, height: 297});
             pdf.save(`${this.state.invoiceNo}.pdf`);
             this.setState({loading: false});
             setTimeout(_ => {
-                this.props.onClose(true);
+                this.props.onClose({});
                 const notificationService = NotificationService.getInstance();
                 notificationService.showNotification('Invoice downloaded successfully', "success");
             }, 1000);
         });
     }
 
+    onClose = (event: any) => {
+        if (event.target.className !== 'dwb') {
+            this.props.onClose({});
+        }
+    }
+
     render() {
         return (
             <Modal open={this.props.open} onClose={this.props.onClose}>
-                <ClickAwayListener onClickAway={this.props.onClose}>
+                <ClickAwayListener onClickAway={this.onClose}>
                     <div className="invoice-container" id="invoice-container">
                         <div className="invoice-container__header">
                             <div className="invoice-container__header__title">Invoice</div>
@@ -123,11 +129,11 @@ export class Invoice extends Component<InvoiceProps, InvoiceState> {
                         </div>
                     </div>
                 </ClickAwayListener>
-                <div className="download-button">
+                <div className="download-button dwb">
                     {
                         !this.state.loading ?
-                            <img onClick={this.downloadInvoice} src="https://img.icons8.com/carbon-copy/35/000000/download.png" alt=""/> :
-                            <MoonLoader color={'black'} size={30} />
+                            <img onClick={this.downloadInvoice} src="https://img.icons8.com/carbon-copy/35/000000/download.png" alt="" className="dwb"/> :
+                            <div style={{pointerEvents: 'none'}}><MoonLoader color={'black'} size={30} /></div>
                     }
                 </div>
             </Modal>
