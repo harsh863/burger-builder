@@ -28,6 +28,7 @@ export class OrderPalette extends Component<OrderPaletteProps, OrderPaletteState
     componentDidMount() {
         const currentTime = moment(new Date());
         const difference_from_delivery = moment(this.props.order.delivery_time).diff(currentTime, 'minutes');
+        console.log(this.props.order, difference_from_delivery);
         if (difference_from_delivery >= 1) {
             setTimeout(_ => this.setState({isDelivered: true}), (difference_from_delivery - 1) * 60 * 1000);
         }

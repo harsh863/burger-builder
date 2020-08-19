@@ -8,12 +8,16 @@ export class FormSelect extends Component<FormSelectProps, any> {
             <FormControl variant={this.props.variant || 'outlined'} style={{width: '100%'}}
                          size={this.props.size || 'small'}
                          disabled={this.props.disabled}>
-                <InputLabel>{this.props.label || ''}</InputLabel>
+                {
+                    this.props.label ?
+                        <InputLabel>{this.props.label}</InputLabel> : null
+                }
                 <Select value={this.props.value || this.props.options[0].value}
                         onChange={this.props.onSelect}
+                        IconComponent={this.props.iconComponent}
                         label={this.props.label || ''}>
                     {this.props.options.map(option =>
-                        <ListItem key={option.value} value={option.value}>
+                        <ListItem key={option.value} value={option.value} style={{cursor: 'pointer'}}>
                             {
                                 option?.meta?.iconUrl ?
                                     <img src={option.meta.iconUrl} alt="" style={{marginRight: '10px'}}/> : null
@@ -34,4 +38,5 @@ interface FormSelectProps {
     disabled?: boolean;
     options: {value: any, displayName: any, meta?: any}[];
     onSelect: (event: any) => void,
+    iconComponent?: React.ElementType;
 }

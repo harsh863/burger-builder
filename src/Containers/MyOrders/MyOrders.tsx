@@ -15,13 +15,49 @@ import {AuthStore} from "../../Models/auth-store.model";
 import {RoutePaths} from "../../Enum/route-paths.enum";
 import {authGuard} from "../../HOC/Guards/auth.guard";
 import {Link} from "react-router-dom";
+import {FormSelect} from "../../Helper/FormItems/FormSelect/FormSelect";
+import moment from "moment";
 
 class MyOrders extends Component<MyOrdersContainerProps, MyOrdersContainerState>{
+    filterOptions = [
+        {value: 'all', displayName: 'View All', meta: {iconUrl: "https://img.icons8.com/ios/17/000000/show-all-views.png"}},
+        {value: 'delivered', displayName: 'Delivered', meta: {iconUrl: "https://img.icons8.com/nolan/17/000000/double-tick.png"}},
+        {value: 'not_delivered', displayName: 'To be delivered', meta: {iconUrl: "https://img.icons8.com/ios/17/000000/data-pending.png"}}
+    ];
     state = {
-        isOrderDelete: true
+        isOrderDelete: true,
+        filterValue: this.filterOptions[0].value,
+        filteredOrders: []
     };
     private _notificationService = NotificationService.getInstance();
     private _spinnerService = SpinnerService.getInstance();
+
+    UNSAFE_componentWillReceiveProps(nextProps: Readonly<MyOrdersContainerProps>, nextContext: any) {
+        if (nextProps.error) {
+            this._notificationService.showNotification('An unknown error occurred while fetching Orders from server', "error");
+        }
+        if (nextProps.deleteBurgerFailed) {
+            this._notificationService.showNotification(`${this.state.isOrderDelete ? 'Deleting' : 'Cancelling'} Order Failed`, "error");
+        }
+        if (nextProps.deleteBurgerSuccessful) {
+            this._notificationService.showNotification(`Order ${this.state.isOrderDelete ? 'Deleted' : 'Cancelled'} Successfully`, "success");
+        }
+    }
+
+    getFilteredOrders = (allOrders: Order[], filterValue: string): Order[] => {
+        return allOrders.filter(order => {
+            const currentTime = moment(new Date());
+            const difference_from_delivery = moment(order.delivery_time).diff(currentTime, 'minutes');
+            if (filterValue === 'all') {
+                return true;
+            } else if (filterValue === 'delivered') {
+                return difference_from_delivery <= 1;
+            } else {
+                return  difference_from_delivery > 1;
+            }
+
+        })
+    }
 
     componentDidMount() {
         if (!this.props.idTokenLoaded) {
@@ -31,16 +67,13 @@ class MyOrders extends Component<MyOrdersContainerProps, MyOrdersContainerState>
         this.props.fetchOrders(this.props.history, this.props.userId);
     }
 
-    componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<{}>, snapshot?: any) {
-        if (this.props.error) {
-            this._notificationService.showNotification('An unknown error occurred while fetching Orders from server', "error");
-        }
-        if (this.props.deleteBurgerFailed) {
-            this._notificationService.showNotification(`${this.state.isOrderDelete ? 'Deleting' : 'Cancelling'} Order Failed`, "error");
-        }
-        if (this.props.deleteBurgerSuccessful) {
-            this._notificationService.showNotification(`Order ${this.state.isOrderDelete ? 'Deleted' : 'Cancelled'} Successfully`, "success");
-        }
+    onFilterChange = (value: string) => {
+        this.setState({filterValue: value});
+        this.forceUpdate();
+    }
+
+    filterIcon = () => {
+        return <img src="https://img.icons8.com/ultraviolet/18/000000/filter.png" style={{paddingRight: '6px'}} alt=""/>;
     }
 
     deleteOrder = (orderId: string, isDelete: boolean) => {
@@ -61,8 +94,23 @@ class MyOrders extends Component<MyOrdersContainerProps, MyOrdersContainerState>
                         <div className="my-order-container">
                             {
                                 this.props.orders.length ?
-                                    this.props.orders.map((order: Order, index: string | number | undefined) =>
-                                        <OrderPalette key={index} order={order} onDelete={this.deleteOrder}/>) :
+                                    <Fragment>
+                                        <div className="my-order-container__filter-row">
+                                            <FormSelect value={this.state.filterValue}
+                                                        options={this.filterOptions} variant="standard"
+                                                        onSelect={event => this.onFilterChange(event.target.value)}
+                                                        iconComponent={this.filterIcon}/>
+                                        </div>
+                                        {
+                                            this.getFilteredOrders(this.props.orders, this.state.filterValue).length > 0 ?
+                                                this.getFilteredOrders(this.props.orders, this.state.filterValue).map((order: Order, index: string | number | undefined) =>
+                                                    <OrderPalette key={order.id} order={order} onDelete={this.deleteOrder}/>) :
+                                                <div className="my-order-container__null-filter-search-block">
+                                                    <h4 style={{color: RandomColorUtils.getRandomColor()}}>Nothing Here</h4>
+                                                    <p>To reset the filter, click <span className="link" onClick={event => this.onFilterChange(this.filterOptions[0].value)}>here</span></p>
+                                                </div>
+                                        }
+                                    </Fragment> :
                                     <div className="my-order-container__no-orders-block">
                                         <h4 style={{color: RandomColorUtils.getRandomColor()}}>You haven't ordered anything yet.</h4>
                                         <p>Start creating your first burger by clicking <Link to={RoutePaths.BURGER_BUILDER}>here</Link></p>
@@ -108,4 +156,6 @@ interface MyOrdersContainerProps extends RouteComponentProps{
 
 interface MyOrdersContainerState {
     isOrderDelete: boolean;
+    filterValue: string;
+    filteredOrders: Order[];
 }
