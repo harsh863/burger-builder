@@ -4,7 +4,6 @@ import {store} from "../index";
 
 export class ApiService {
     private static instance: ApiService;
-    public static signal = axios.CancelToken.source();
 
     axiosInstance = axios.create({
         baseURL: BASE_URL,

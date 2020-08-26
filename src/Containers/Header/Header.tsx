@@ -2,8 +2,7 @@ import React, {Component, Suspense, Fragment} from "react";
 import {AppLogo} from "../../Components/AppLogo/AppLogo";
 import './Header.scss';
 import {NavigationItems} from "../../Components/NavigationItems/NavigationItems";
-
-const MenuDrawer = React.lazy(() => import("../../Components/MenuDrawer/MenuDrawer"));
+import MenuDrawer from "../../Components/MenuDrawer/MenuDrawer";
 
 export class Header extends Component<any, HeaderState>{
     state = {
@@ -52,13 +51,10 @@ export class Header extends Component<any, HeaderState>{
                 </div>
                 {
                     this.state.drawerVisible ?
-                        <Suspense fallback={<div/>}>
-                            <MenuDrawer side="left"
-                                        drawerVisible={this.state.drawerVisible}
-                                        onDrawerToggle={this.toggleDrawer}
-                                        desktopMode={this.state.desktopMode} />
-                        </Suspense> :
-                        null
+                        <MenuDrawer side="left"
+                                    drawerVisible={this.state.drawerVisible}
+                                    onDrawerToggle={this.toggleDrawer}
+                                    desktopMode={this.state.desktopMode} /> : null
                 }
             </Fragment>
         );
