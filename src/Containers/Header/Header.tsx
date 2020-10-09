@@ -1,4 +1,4 @@
-import React, {Component, Suspense, Fragment} from "react";
+import React, {Component, Fragment} from "react";
 import {AppLogo} from "../../Components/AppLogo/AppLogo";
 import './Header.scss';
 import {NavigationItems} from "../../Components/NavigationItems/NavigationItems";
