@@ -1,19 +1,31 @@
-## Available Scripts
+<div align="center">
+    <img src="public/bb-logo/icon-192x192.png"/>
+</div>
+<h1 align="center">Burger Builder</h1>
 
-In the project directory, you can run:
+<p align="center"><b><i>An app to build your own burger, place that order and also view all your orders. ( Demonstrates the basic workflow of ReactJS )</i></b></p>
 
-### `npm start`
+## Live :-
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To check the working demo of the application visit here: https://build-my-burger.vercel.app/ .
+In case you don't want to create an account when you visit, here are the credentials for testing purpose only:
+```
+Email: mzr55657@zwoho.com
+Password: build-my-burger
+```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## How to setup locally:-
+1.&nbsp; Clone the repository in your system using:
+ - #### HTTP
+```
+git clone https://github.com/harsh863/burger-builder.git
+```
 
-### `npm run build`
+- #### SSH
+```
+git clone git@github.com:harsh863/burger-builder.git
+```
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2.&nbsp; Navigate to root directory of the project and run `npm install` in your terminal to install all required packages.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+3.&nbsp; To start the project run `npm start` in your terminal.
