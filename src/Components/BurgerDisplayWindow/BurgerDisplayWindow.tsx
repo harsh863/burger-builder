@@ -27,7 +27,7 @@ export class BurgerDisplayWindow extends Component<BurgerProps>{
                 <BurgerIngredient type={Ingredients.TOP_BREAD} />
                 {
                     middleIngredients.length ?
-                        middleIngredients : !this.props.smallView ? <p className='no-ingredient-text'>Please start adding ingredients!</p> : null
+                        middleIngredients : !this.props.smallView ? <p className='no-ingredient-text'>Please start adding the ingredients!</p> : null
                 }
                 <BurgerIngredient type={Ingredients.BOTTOM_BREAD} />
             </div>
