@@ -18,3 +18,18 @@ code {
   top: 0;
   height: 100px;
 }
+
+* {
+  &::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
